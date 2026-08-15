@@ -72,7 +72,9 @@ bindings here only for pi-runtime mechanics.
 | `lib/resolve-core-root.sh` | The single realization of the core-root resolution chain, called by all eight bindings. |
 | `extensions/livespec-footgun-guard.ts` | The ONE sanctioned first-party pi extension — the `tool_call`-blocking footgun guard. |
 | `package.json` | The pi package manifest (`pi.skills`, `pi.extensions`, the `pi-package` keyword). Its `$.version` is release-please-managed via `extra-files`. |
+| `SPECIFICATION/` | This repo's own live livespec spec (dogfooded), governing the Driver-owned seam only: the pi package manifest, the eight-binding set, the core-root resolution chain, config-named CLI dispatch, and the footgun-guard extension. It defers to livespec core by citation and never restates the upstream contract. |
 | `tests/dev-tooling/` | pytest mirror of `dev-tooling/`, holding the 100%-coverage suite for both repo-local structural checks. |
+| `tests/heading-coverage.json` | The heading-coverage map. Every `## ` H2 in the spec tree needs an entry; co-edit it in the SAME revise payload that changes an H2 set. |
 | `.livespec.jsonc` | Project-local livespec config: template, spec_root, active orchestrator plugin, the Driver `compat` pin against core, the declared harnesses, and the per-repo beads tenant connection block. |
 | `dev-tooling/` | The family-standard enforcement scaffolds: the `just check` aggregate runner, the pre-push gate, the staged-ruff autofixer, the factory-branch workflow guard, and the two repo-local structural checks (the spec-governance default-block gate and `check-pi-package-structure`). The worktree-discipline pack and the commit-refuse hooks are NOT tracked here — `just bootstrap` installs both from the shared `livespec-dev-tooling` package. |
 | `justfile`, `lefthook.yml`, `check-targets.txt`, `pyproject.toml` | Family-standard task runner, git-hook config, aggregate target list, and dev-tooling pins. |
@@ -117,15 +119,32 @@ assuming a piece is missing by accident.
 - **The `tests/` tree**, mirroring `dev-tooling/`, at 100% coverage — which is
   what makes `check-coverage` / `check-per-file-coverage` meaningful rather
   than green over an empty measurement.
+- **The dogfooded `SPECIFICATION/` tree**, seeded at `v001` through livespec
+  core's own seed operation, governing the Driver-owned seam only. Its
+  companion wiring landed in the same pass: `dev-tooling/check-doctor-static.sh`,
+  the `check-doctor-static` justfile recipe and `check-targets.txt` entry, the
+  dedicated CI job (which checks livespec core out at the release tag
+  `.livespec.jsonc` pins, since the checker ships with CORE), and — the part a
+  forgotten pass silently loses — that job's entry in `ci-green`'s `needs:`
+  list.
+- **`tests/heading-coverage.json`**, one entry per spec `## ` H2. Every entry is
+  a `TODO` today; the `scenarios.md` reasons name the INTEGRATION tier
+  explicitly, which `check-heading-coverage` requires for a scenario heading —
+  a reason that merely cites the implementing work-item fails the check.
+- **The citation allowlist.** `.livespec.jsonc` carries `external_references`
+  for the upstream sections this spec cites, plus a `cross_repo_targets`
+  entry for `livespec`. Doctor-static re-reads the real upstream file when that
+  clone is resolvable, so a renamed upstream section fails here instead of
+  rotting silently. Adding a new upstream citation to the spec means adding it
+  to that list in the same change.
+- **Branch protection**, verified live: `master` requires exactly one status
+  context, `ci-green`, with admin enforcement and linear history on and
+  strict/up-to-date OFF. That single context is why adding a CI job without
+  adding it to `ci-green`'s `needs:` list stops gating silently.
 
 **Pending, in roughly this order:**
 
-1. **The dogfooded `SPECIFICATION/` seed.** That pass MUST also add
-   `dev-tooling/check-doctor-static.sh`, the `check-doctor-static` justfile
-   recipe and `check-targets.txt` entry, and the dedicated
-   `check-doctor-static` CI job — including adding it to `ci-green`'s
-   `needs:` list, which is where a forgotten job silently stops gating.
-2. **The three repo secrets** the sibling Drivers carry, none of which exist
+1. **The three repo secrets** the sibling Drivers carry, none of which exist
    here yet — verified live against `livespec-driver-codex`, which has all
    three. Until they are set, four workflows fail on every trigger:
    `release-please.yml`, `auto-enable-merge.yml`, and
@@ -141,15 +160,15 @@ assuming a piece is missing by accident.
    | `APP_PRIVATE_KEY` | the same three |
    | `HONEYCOMB_GITHUB_CI_INGEST_KEY_LIVESPEC` | the CI telemetry export |
 
-3. **Branch protection** with `ci-green` as the sole required context.
-4. **Fleet-manifest registration** in livespec core's
+2. **Fleet-manifest registration** in livespec core's
    `.livespec-fleet-manifest.jsonc`, and the `livespec-sibling` GitHub topic.
    These happen **LAST**, once everything above is done.
 
-**Deliberately not wired yet, because their subjects do not exist:**
-`check-doctor-static` (no `SPECIFICATION/` tree yet) and the CLI-end-to-end
-harness. Each is wired by the pass that creates what it guards — a gate shipped
-ahead of its subject is a red CI job that teaches nothing.
+**Deliberately not wired yet, because its subject does not exist:** the
+CLI-end-to-end harness. A gate is wired by the pass that creates what it guards
+— one shipped ahead of its subject is a red CI job that teaches nothing.
+(`check-doctor-static` was the other entry here; the `SPECIFICATION/` seed pass
+created its subject and wired it in the same change.)
 
 The CLI-end-to-end gate deserves its own sentence, because "the subject does not
 exist" is not the whole reason. The sibling Drivers' `tests/e2e-cli/` suites
@@ -176,10 +195,10 @@ Every repo change uses a **worktree → PR → merge → cleanup** path. Leaving
 dirty state, committing on the primary checkout, or asking whether to commit
 are failures of the workflow, not acceptable stopping points.
 
-The one exception is the current bootstrap phase itself, which commits
-directly to `master` because no branch protection and no commit-refuse hook
-are installed yet. Once `just bootstrap` has run and branch protection is
-enabled, the ordinary discipline applies without exception:
+The bootstrap-phase exception that let early passes commit directly to `master`
+is CLOSED: the commit-refuse hooks are armed on the primary checkout and
+`master` is protected behind `ci-green`. The ordinary discipline now applies
+without exception:
 
 1. Confirm the primary checkout before editing (a primary checkout's git-dir
    equals its git-common-dir; a secondary worktree's differs).

@@ -81,8 +81,8 @@ python3 "$LIVESPEC_CORE_ROOT/scripts/bin/critique.py" --findings-json <path> [--
 
 ## Mutating-operation precondition
 
-`critique` MUTATES the specification tree. Per livespec
-`SPECIFICATION/contracts.md` §"Driver-shipped hooks", a mutating pi operation
+`critique` MUTATES the specification tree. Per the Driver-shipped-hooks
+contract in livespec `SPECIFICATION/contracts.md`, a mutating pi operation
 MUST NOT be exercised unless this Driver's `tool_call` footgun-guard extension
 (`extensions/livespec-footgun-guard.ts`) is loaded. If pi reports that the
 package's extensions are not loaded — most often the project-trust gate under a

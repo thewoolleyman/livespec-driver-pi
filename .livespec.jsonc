@@ -38,10 +38,48 @@
   "template": "livespec",
   "spec_root": "SPECIFICATION",
   "implementation": { "plugin": "livespec-orchestrator-beads-fabro" },
+  // Cross-spec citation allowlist. This repo's SPECIFICATION/ defers to
+  // livespec core by citation and never restates the upstream contract, so
+  // each upstream SECTION it names with the section-sign form is declared
+  // here. doctor-static's no-cross-spec-reference check resolves a citation
+  // either against this tree's own headings or against this allowlist, and —
+  // when the cited repo's clone is readable — re-reads the real upstream file
+  // and DROPS any entry whose heading is missing there. So an entry here is a
+  // live assertion that the upstream section exists, not a mere permission.
+  //
+  // Two consequences that have already cost a CI run, both worth reading
+  // before adding an entry:
+  //
+  //   1. An UNREADABLE clone is not treated as "clone unavailable" — it maps
+  //      to an EMPTY heading set, which drops EVERY entry for that repo and
+  //      fails allowlisted citations with the misleading "is not allowlisted".
+  //      `cross_repo_targets.livespec.local_clone` below is the host-absolute
+  //      /data/projects/livespec, which cannot exist on a CI runner, so the
+  //      check-doctor-static CI job points LIVESPEC_SIBLING_CLONES_ROOT (which
+  //      takes precedence over local_clone) at the pinned core checkout it
+  //      already makes.
+  //   2. Validation therefore runs against the PINNED core release, not core
+  //      master. The pi dogfooding sections of core's
+  //      non-functional-requirements.md are ratified on core master but are
+  //      NOT in the pinned release yet, so they are deliberately absent from
+  //      this list and this spec cites those at FILE level, naming the section
+  //      in prose. Add the anchors here in the same change that bumps the pin
+  //      to a release carrying them.
+  "external_references": {
+    "livespec": [
+      "SPECIFICATION/contracts.md §\"Plugin distribution\"",
+      "SPECIFICATION/contracts.md §\"Driver-shipped hooks\""
+    ]
+  },
   // Planning/work-item-resolution registry. These targets are the repo slugs
   // accepted by cross-tenant DependsOnEntry refs (`sibling_work_item`,
   // `pull_request`, and `branch`).
   "cross_repo_targets": {
+    "livespec": {
+      "github_url": "https://github.com/thewoolleyman/livespec",
+      "local_clone": "/data/projects/livespec",
+      "default_branch": "master"
+    },
     "livespec-dev-tooling": {
       "github_url": "https://github.com/thewoolleyman/livespec-dev-tooling",
       "local_clone": "/data/projects/livespec-dev-tooling",
