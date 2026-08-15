@@ -144,21 +144,20 @@ assuming a piece is missing by accident.
 
 **Pending, in roughly this order:**
 
-1. **The three repo secrets** the sibling Drivers carry, none of which exist
-   here yet — verified live against `livespec-driver-codex`, which has all
-   three. Until they are set, four workflows fail on every trigger:
-   `release-please.yml`, `auto-enable-merge.yml`, and
-   `fast-forward-release-branch.yml` all die at `Mint App installation
-   token` with `Input required and not supplied: app-id`, and
-   `export-telemetry` cannot reach Honeycomb. None of them gate `ci-green`,
-   so this does not block merges — it silently disables the release train
-   and the auto-merge path.
-
-   | Secret | Used by |
-   |---|---|
-   | `APP_ID` | release-please, auto-enable-merge, fast-forward-release-branch |
-   | `APP_PRIVATE_KEY` | the same three |
-   | `HONEYCOMB_GITHUB_CI_INGEST_KEY_LIVESPEC` | the CI telemetry export |
+1. **The fleet GitHub App installation grant** (MAINTAINER-ONLY). The three
+   repo secrets the sibling Drivers carry — `APP_ID`, `APP_PRIVATE_KEY`
+   (normalized single-line PEM), `HONEYCOMB_GITHUB_CI_INGEST_KEY_LIVESPEC` —
+   ARE all set (verified 2026-08-15 via `gh secret list`; an earlier revision
+   of this section claimed they were missing, which was true before
+   2026-08-15T14:43Z and is stale now). The remaining gap is that the fleet
+   GitHub App installation `131208965` does not include this repository, so
+   `Mint App installation token` 404s and `release-please.yml`,
+   `auto-enable-merge.yml`, and `fast-forward-release-branch.yml` fail on
+   every trigger (verified against the 2026-08-15T15:37Z run). None of them
+   gate `ci-green`, so this does not block merges — it silently disables the
+   release train and the auto-merge path. Once the grant lands: first release
+   cut (multiple `feat:` commits pending) → `release` branch → the `@release`
+   install channel exists.
 
 2. **Fleet-manifest registration** in livespec core's
    `.livespec-fleet-manifest.jsonc`, and the `livespec-sibling` GitHub topic.
@@ -185,8 +184,9 @@ EXEMPT harnesses but does not declare this repo's own `pi` harness. The
 shared `check-plugin-resolution` Verifier fails closed on an unknown
 harness key, and its `_KNOWN_HARNESSES` set in `livespec-dev-tooling` is
 currently `{"claude", "codex"}`. Extending that set (plus a pi runner in
-`_build_live_runners`) is upstream work in `livespec-dev-tooling`; adding
-the `"pi": { "status": "supported", ... }` entry here is the follow-up that
+`_build_live_runners`) is upstream work in `livespec-dev-tooling`, filed
+there as `livespec-dev-tooling-a924`; adding the
+`"pi": { "status": "supported", ... }` entry here is the follow-up that
 lands with it.
 
 ## Repository mutation protocol
