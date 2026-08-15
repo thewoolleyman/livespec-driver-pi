@@ -114,8 +114,24 @@ assuming a piece is missing by accident.
 4. **The beads tenant** (`.beads/config.yaml` + the regenerable
    `metadata.json`) — provisioned by the supervising session, not by repo
    work. `.livespec.jsonc` already carries the matching connection block.
-5. **Branch protection** with `ci-green` as the sole required context.
-6. **Fleet-manifest registration** in livespec core's
+5. **The three repo secrets** the sibling Drivers carry, none of which exist
+   here yet — verified live against `livespec-driver-codex`, which has all
+   three. Until they are set, four workflows fail on every trigger:
+   `release-please.yml`, `auto-enable-merge.yml`, and
+   `fast-forward-release-branch.yml` all die at `Mint App installation
+   token` with `Input required and not supplied: app-id`, and
+   `export-telemetry` cannot reach Honeycomb. None of them gate `ci-green`,
+   so this does not block merges — it silently disables the release train
+   and the auto-merge path.
+
+   | Secret | Used by |
+   |---|---|
+   | `APP_ID` | release-please, auto-enable-merge, fast-forward-release-branch |
+   | `APP_PRIVATE_KEY` | the same three |
+   | `HONEYCOMB_GITHUB_CI_INGEST_KEY_LIVESPEC` | the CI telemetry export |
+
+6. **Branch protection** with `ci-green` as the sole required context.
+7. **Fleet-manifest registration** in livespec core's
    `.livespec-fleet-manifest.jsonc`, and the `livespec-sibling` GitHub topic.
    These happen **LAST**, once everything above is done.
 
