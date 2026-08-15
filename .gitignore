@@ -44,7 +44,5 @@ dist/
 # it carries the server-mode connection block for the livespec-driver-pi
 # Dolt tenant with NO per-machine project_id and NO password (the tenant
 # password is supplied via the BEADS_DOLT_PASSWORD env var at bd-call time).
-# The beads tenant is PENDING (see AGENTS.md §"Bootstrap status"), so no
-# `.beads/` tree exists yet.
 .beads-credential-key
 *.env.local

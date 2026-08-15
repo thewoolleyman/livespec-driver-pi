@@ -23,7 +23,7 @@ core **v208**:
   §"pi dogfooding compatibility", §"pi dogfooding contracts",
   §"pi dogfooding constraints".
 
-## What this repo will ship
+## What this repo ships
 
 Eight thin pi skills, named `livespec-<operation>` and invoked as
 `/skill:livespec-<operation>`:
@@ -68,8 +68,13 @@ bindings here only for pi-runtime mechanics.
 
 | Path | Purpose |
 |---|---|
+| `skills/livespec-<operation>/SKILL.md` | The eight thin operation bindings. pi-runtime mechanics only: resolve `<core-root>`, read core's prose in full, dispatch the config-named CLI. |
+| `lib/resolve-core-root.sh` | The single realization of the core-root resolution chain, called by all eight bindings. |
+| `extensions/livespec-footgun-guard.ts` | The ONE sanctioned first-party pi extension — the `tool_call`-blocking footgun guard. |
+| `package.json` | The pi package manifest (`pi.skills`, `pi.extensions`, the `pi-package` keyword). Its `$.version` is release-please-managed via `extra-files`. |
+| `tests/dev-tooling/` | pytest mirror of `dev-tooling/`, holding the 100%-coverage suite for both repo-local structural checks. |
 | `.livespec.jsonc` | Project-local livespec config: template, spec_root, active orchestrator plugin, the Driver `compat` pin against core, the declared harnesses, and the per-repo beads tenant connection block. |
-| `dev-tooling/` | The family-standard enforcement scaffolds: the `just check` aggregate runner, the pre-push gate, the staged-ruff autofixer, the factory-branch workflow guard, and the repo-local spec-governance default-block check. The worktree-discipline pack and the commit-refuse hooks are NOT tracked here — `just bootstrap` installs both from the shared `livespec-dev-tooling` package. |
+| `dev-tooling/` | The family-standard enforcement scaffolds: the `just check` aggregate runner, the pre-push gate, the staged-ruff autofixer, the factory-branch workflow guard, and the two repo-local structural checks (the spec-governance default-block gate and `check-pi-package-structure`). The worktree-discipline pack and the commit-refuse hooks are NOT tracked here — `just bootstrap` installs both from the shared `livespec-dev-tooling` package. |
 | `justfile`, `lefthook.yml`, `check-targets.txt`, `pyproject.toml` | Family-standard task runner, git-hook config, aggregate target list, and dev-tooling pins. |
 | `.github/` | Per-target matrix CI plus the seven fleet shim / release-automation workflows, and the closed-loop Honeycomb telemetry export script. |
 | `.claude/` | Project-scope Claude plugin enablement (`settings.json`) and the `CLAUDE.md` → `AGENTS.md` symlink. |
@@ -94,27 +99,33 @@ assuming a piece is missing by accident.
   shims, release-park, release-please, fast-forward-release-branch,
   auto-enable-merge) plus the CI telemetry export.
 - `.livespec.jsonc` and the project-scope `.claude/` configuration.
+- **The beads tenant.** `.beads/config.yaml` (committed; TCP server-mode
+  connection to the `livespec-driver-pi` Dolt tenant) plus the gitignored,
+  regenerable `metadata.json`, landed in `183321d`.
+- **The pi package surface.** The eight `livespec-<operation>` SKILL.md
+  bindings, the shared `lib/resolve-core-root.sh` resolver, the sanctioned
+  TypeScript footgun-guard extension, and the `package.json` pi manifest —
+  with `release-please-config.json` carrying the `extra-files` JSON updater
+  for the manifest's `$.version`, so it tracks releases.
+- **`check-pi-package-structure`**, the repo-local structural gate over that
+  surface, wired into the justfile, `check-targets.txt`, and the CI matrix. It
+  exists because the shared `check-skill-invocation-paths` Verifier is scoped
+  to `.claude-plugin/skills/` and therefore VACUOUSLY SKIPS in a pi package —
+  it returns 0 having inspected nothing. There is NO shared
+  `check-plugin-structure` module in `livespec-dev-tooling` (the earlier note
+  here naming one was mistaken); this repo-local check is the analogue.
+- **The `tests/` tree**, mirroring `dev-tooling/`, at 100% coverage — which is
+  what makes `check-coverage` / `check-per-file-coverage` meaningful rather
+  than green over an empty measurement.
 
 **Pending, in roughly this order:**
 
-1. **The eight `livespec-<operation>` pi skills** and the pi plugin/
-   marketplace manifests. That pass MUST also: wire `check-plugin-structure`
-   into the justfile, `check-targets.txt`, and the CI matrix; and add the
-   `extra-files` JSON updater entry to `release-please-config.json` pointing
-   at the new plugin manifest's `$.version`, or the manifest version silently
-   stops tracking releases.
-2. **The TypeScript footgun-guard pi extension** plus its tests. That pass
-   wires its own gate, and revisits `[tool.livespec_dev_tooling]`
-   `source_trees` / `source_tree_prefixes` if it brings any Python with it.
-3. **The dogfooded `SPECIFICATION/` seed.** That pass MUST also add
+1. **The dogfooded `SPECIFICATION/` seed.** That pass MUST also add
    `dev-tooling/check-doctor-static.sh`, the `check-doctor-static` justfile
    recipe and `check-targets.txt` entry, and the dedicated
    `check-doctor-static` CI job — including adding it to `ci-green`'s
    `needs:` list, which is where a forgotten job silently stops gating.
-4. **The beads tenant** (`.beads/config.yaml` + the regenerable
-   `metadata.json`) — provisioned by the supervising session, not by repo
-   work. `.livespec.jsonc` already carries the matching connection block.
-5. **The three repo secrets** the sibling Drivers carry, none of which exist
+2. **The three repo secrets** the sibling Drivers carry, none of which exist
    here yet — verified live against `livespec-driver-codex`, which has all
    three. Until they are set, four workflows fail on every trigger:
    `release-please.yml`, `auto-enable-merge.yml`, and
@@ -130,16 +141,25 @@ assuming a piece is missing by accident.
    | `APP_PRIVATE_KEY` | the same three |
    | `HONEYCOMB_GITHUB_CI_INGEST_KEY_LIVESPEC` | the CI telemetry export |
 
-6. **Branch protection** with `ci-green` as the sole required context.
-7. **Fleet-manifest registration** in livespec core's
+3. **Branch protection** with `ci-green` as the sole required context.
+4. **Fleet-manifest registration** in livespec core's
    `.livespec-fleet-manifest.jsonc`, and the `livespec-sibling` GitHub topic.
    These happen **LAST**, once everything above is done.
 
 **Deliberately not wired yet, because their subjects do not exist:**
-`check-plugin-structure`, `check-doctor-static`, and the shipped-hook /
-CLI-end-to-end test gates. Each is wired by the pass that creates what it
-guards — a gate shipped ahead of its subject is a red CI job that teaches
-nothing.
+`check-doctor-static` (no `SPECIFICATION/` tree yet) and the CLI-end-to-end
+harness. Each is wired by the pass that creates what it guards — a gate shipped
+ahead of its subject is a red CI job that teaches nothing.
+
+The CLI-end-to-end gate deserves its own sentence, because "the subject does not
+exist" is not the whole reason. The sibling Drivers' `tests/e2e-cli/` suites
+drive a REAL agent runtime end-to-end; the pi analogue would have to launch the
+pi CLI against a live model. That is a live-credential, live-network dependency,
+and the honest options are to wire it as a `real_only`-marked suite that CI skips
+(which gates nothing) or to leave it out until the acceptance drive that
+§"pi dogfooding constraints" already requires is run. It is left out. Do NOT
+substitute a mocked stand-in and call the gate satisfied — a fake pi CLI would
+verify only the fake.
 
 **Known upstream gap.** `.livespec.jsonc` declares `claude` and `codex` as
 EXEMPT harnesses but does not declare this repo's own `pi` harness. The
