@@ -58,6 +58,7 @@ check-tool-backed-check-completeness
 check-vendor-manifest
 check-wrapper-shape
 check-spec-governance-default-block
+check-pi-package-structure
 check-lint
 check-format
 check-types

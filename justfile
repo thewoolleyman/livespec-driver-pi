@@ -356,6 +356,17 @@ check-source-trees-scoped-to-consumer:
 check-spec-governance-default-block:
     uv run python dev-tooling/check-spec-governance-default-block
 
+# Structural gate over the shipped pi package: all eight `livespec-<operation>`
+# SKILL.md bindings present with conforming frontmatter, no binding pointing at
+# `.claude-plugin/skills/*`, canonical `$LIVESPEC_CORE_ROOT` wrapper
+# invocations, prune-history still explicit-user-invocation only, a well-formed
+# `pi` manifest, and the sanctioned footgun-guard extension carrying its four
+# block predicates plus its own catch. This is the pi analogue of the shared
+# `check-skill-invocation-paths` Verifier, which is scoped to
+# `.claude-plugin/skills/` and therefore VACUOUSLY SKIPS in a pi package.
+check-pi-package-structure:
+    uv run python dev-tooling/check-pi-package-structure
+
 check-plan-thread-anchor-declared:
     uv run python -m livespec_dev_tooling.checks.plan_thread_anchor_declared
 

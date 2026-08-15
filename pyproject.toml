@@ -1,12 +1,13 @@
 # pyproject.toml — livespec-driver-pi dev tooling configuration.
 #
-# Family conventions scaled to this repo's content. At the current
-# bootstrap stage the ONLY Python here is the repo-local structural
-# check `dev-tooling/check-spec-governance-default-block`; the pi
-# Driver's own shipped surface is eight thin SKILL.md bindings plus ONE
-# sanctioned TypeScript pi extension (the footgun guard), neither of
-# which is Python. NO [build-system] section: this repo is NOT a
-# published PyPI package; it ships via pi plugin bundling.
+# Family conventions scaled to this repo's content. The ONLY Python here
+# is the two repo-local structural checks under `dev-tooling/`
+# (`check-spec-governance-default-block` and
+# `check-pi-package-structure`); the pi Driver's own SHIPPED surface is
+# eight thin SKILL.md bindings, a POSIX-shell core-root resolver, and ONE
+# sanctioned TypeScript pi extension (the footgun guard) — none of which
+# is Python. NO [build-system] section: this repo is NOT a published PyPI
+# package; it ships via pi package bundling.
 #
 # Authority: livespec/SPECIFICATION/contracts.md §"Plugin distribution",
 # §"Driver-shipped hooks"; livespec/SPECIFICATION/
@@ -97,9 +98,9 @@ ignore = [
 # Pyright — the `check-types` tool-backed gate (fixed fleet policy: every
 # consumer wires check-lint / check-format / check-types / check-coverage,
 # enforced by check-tool-backed-check-completeness). Scoped to `dev-tooling/`,
-# the only first-party Python surface this repo currently carries. When the
-# pi plugin bundle lands, add its Python surface here if it acquires one —
-# the sanctioned pi footgun-guard extension is TypeScript, so it may not.
+# the only first-party Python surface this repo carries. The pi package bundle
+# has landed and brought no Python with it: the bindings are markdown, the
+# core-root resolver is shell, and the sanctioned footgun guard is TypeScript.
 # ---------------------------------------------------------------------------
 [tool.pyright]
 include = ["dev-tooling"]
@@ -141,10 +142,11 @@ plan_lifecycle_anchor = true
 scenario_tiers = ["tests.e2e-cli", "tests.e2e", "tests.integration", "tests.consumer", "tests.prompts", "tests.dev-tooling"]
 # EMPTY on purpose, and empty is the STRICT spelling for this key (its
 # consuming checks derive their universe from `resolve_check_universe()`, so an
-# empty value narrows the exemption rather than blinding a scan). This repo has
-# no first-party product source tree yet: the pi Driver's product surface is
-# eight thin bindings plus a TypeScript extension, neither landed. `dev-tooling/`
-# is deliberately NOT listed — matching the sibling Drivers, which classify it as
+# empty value narrows the exemption rather than blinding a scan). The pi
+# Driver's product surface HAS now landed — `skills/` (markdown),
+# `lib/resolve-core-root.sh` (shell), `extensions/` (TypeScript) — and none of
+# it is Python, so there is no Python source tree to declare. `dev-tooling/` is
+# deliberately NOT listed — matching the sibling Drivers, which classify it as
 # host-provisioning tooling rather than product source.
 source_trees = []
 # No separate io tree.
@@ -160,12 +162,15 @@ covered_trees = []
 # git-derived first-party universe (`resolve_check_universe`) rather than by a
 # declared target-dir list.
 target_dirs = { superseded_by = "git-derived first-party universe owns this repo's Python coverage" }
-# UNARMED, not not-applicable: the concept DOES apply to a Driver repo — the
-# sibling Drivers scope it to their shipped hook tree — but this repo's product
-# surface has not landed, so there is no prefix to name. The pass that lands the
-# plugin bundle (and any Python it brings) sets this to the real prefixes; the
-# co-staging gate `commit_pairs_source_and_test` arms itself the moment it does.
-source_tree_prefixes = { unarmed_until = "the pi Driver's product surface (eight skills + the TypeScript footgun-guard extension) lands" }
+# NOT APPLICABLE, no longer UNARMED: the product surface has landed, and it
+# brought no Python. The key scopes the PYTHON co-staging gate
+# (`commit_pairs_source_and_test`), which has nothing to match against a tree of
+# markdown bindings, a shell resolver, and a TypeScript extension. The
+# equivalent co-staging discipline for THIS surface is carried by
+# `check-pi-package-structure`, which fails when a binding, the manifest, the
+# resolver, or the guard drifts out of shape. Should the Driver ever acquire
+# Python product source, this becomes the real prefix list in the same change.
+source_tree_prefixes = { not_applicable = "the pi Driver's product surface is markdown SKILL.md bindings, a POSIX-shell core-root resolver, and one TypeScript extension — no Python product source exists to scope" }
 tests_tree_prefix = "tests/"
 # No pairings yet: there is no source tree to pair, and naming a `tests/` subtree
 # that does not exist fails check-source-trees-scoped-to-consumer.

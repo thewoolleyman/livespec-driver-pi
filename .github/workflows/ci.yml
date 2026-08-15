@@ -158,6 +158,7 @@ jobs:
           # check-tool-backed-check-completeness requires as literal members
           # of BOTH the `just check` targets array AND a CI matrix.
           - check-spec-governance-default-block
+          - check-pi-package-structure
           - check-lint
           - check-format
           - check-types
