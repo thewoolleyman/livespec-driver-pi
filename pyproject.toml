@@ -1,0 +1,196 @@
+# pyproject.toml — livespec-driver-pi dev tooling configuration.
+#
+# Family conventions scaled to this repo's content. At the current
+# bootstrap stage the ONLY Python here is the repo-local structural
+# check `dev-tooling/check-spec-governance-default-block`; the pi
+# Driver's own shipped surface is eight thin SKILL.md bindings plus ONE
+# sanctioned TypeScript pi extension (the footgun guard), neither of
+# which is Python. NO [build-system] section: this repo is NOT a
+# published PyPI package; it ships via pi plugin bundling.
+#
+# Authority: livespec/SPECIFICATION/contracts.md §"Plugin distribution",
+# §"Driver-shipped hooks"; livespec/SPECIFICATION/
+# non-functional-requirements.md §"pi dogfooding compatibility",
+# §"pi dogfooding contracts", §"pi dogfooding constraints" (v208).
+
+[project]
+name = "livespec-driver-pi"
+version = "0.0.0"
+description = "pi Driver for livespec — thin livespec-<operation> SKILL.md bindings"
+requires-python = ">=3.10.16"
+authors = [
+    { name = "Chad Woolley", email = "thewoolleyman@gmail.com" },
+]
+
+dependencies = [
+    "livespec-runtime>=0.18.0",
+]
+
+[dependency-groups]
+# Every Python dev tool is uv-managed via this table (resolved into
+# uv.lock; installed into a project-local .venv via
+# `uv sync --all-groups`). Mise pins only the non-Python binaries in
+# .mise.toml.
+dev = [
+    "ruff==0.8.6",
+    "pyright==1.1.391",
+    "pytest==8.3.4",
+    "pytest-cov==6.0.0",
+    "livespec-dev-tooling",
+]
+
+# livespec-dev-tooling is consumed from the github.com sibling-library
+# repo via uv git source per
+# livespec/SPECIFICATION/contracts.md §"Shared code sync — livespec-dev-tooling".
+# Both pins deliberately match the donor scaffold (livespec-driver-codex) tag
+# for tag: they are bumped fleet-wide by the release-dispatch fan-out, never
+# hand-advanced at scaffold time.
+[tool.uv.sources]
+livespec-dev-tooling = { git = "https://github.com/thewoolleyman/livespec-dev-tooling.git", tag = "v1.20.6" }
+livespec-runtime = { git = "https://github.com/thewoolleyman/livespec-runtime.git", tag = "v0.18.2" }
+
+# ---------------------------------------------------------------------------
+# Ruff — sole linter + formatter. Rule set mirrors the family baseline
+# (livespec/pyproject.toml [tool.ruff]) minus the product-code-only
+# categories that have no surface in a bindings-plus-checks repo.
+# ---------------------------------------------------------------------------
+
+[tool.ruff]
+line-length = 100
+extend-exclude = ["**/__pycache__/**"]
+
+[tool.ruff.lint]
+select = [
+    "E",     # pycodestyle errors
+    "F",     # pyflakes
+    "I",     # isort
+    "B",     # flake8-bugbear
+    "BLE",   # flake8-blind-except
+    "UP",    # pyupgrade
+    "SIM",   # flake8-simplify
+    "C90",   # mccabe complexity
+    "N",     # pep8-naming
+    "RUF",   # ruff-specific
+    "PTH",   # flake8-use-pathlib
+    "PIE",   # flake8-pie
+    "TID",   # flake8-tidy-imports
+    "ERA",   # eradicate
+    "ARG",   # flake8-unused-arguments
+    "PT",    # flake8-pytest-style
+    "ISC",   # flake8-implicit-str-concat
+    "T20",   # flake8-print — bans print/pprint outside the check's stderr writes
+]
+ignore = [
+    "ISC001",  # implicit-str-concat on one line; conflicts with the formatter
+]
+
+[tool.ruff.lint.per-file-ignores]
+# `tests/e2e-cli/` is mandated by name (livespec/SPECIFICATION/contracts.md
+# §"CLI end-to-end harness contract"); the hyphen is not a valid Python
+# module-name character and the tree is never imported as a package.
+"tests/e2e-cli/**.py" = ["N999"]
+# `dev-tooling/` and its mirror `tests/dev-tooling/` carry the same hyphen.
+"tests/dev-tooling/**.py" = ["N999"]
+"dev-tooling/**.py" = ["N999"]
+
+# ---------------------------------------------------------------------------
+# Pyright — the `check-types` tool-backed gate (fixed fleet policy: every
+# consumer wires check-lint / check-format / check-types / check-coverage,
+# enforced by check-tool-backed-check-completeness). Scoped to `dev-tooling/`,
+# the only first-party Python surface this repo currently carries. When the
+# pi plugin bundle lands, add its Python surface here if it acquires one —
+# the sanctioned pi footgun-guard extension is TypeScript, so it may not.
+# ---------------------------------------------------------------------------
+[tool.pyright]
+include = ["dev-tooling"]
+reportUnusedCallResult = "error"
+exclude = ["**/__pycache__/**"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "mock_only: skipped under LIVESPEC_E2E_HARNESS=real per the CLI e2e harness contract",
+    "real_only: skipped outside LIVESPEC_E2E_HARNESS=real (drives the live pi CLI)",
+]
+
+# `[tool.livespec_dev_tooling]` — this binding repo's dev-tooling layout
+# config. Every role key MUST be DECLARED. An undeclared key that a wired
+# check consumes is a hard ERROR naming the key and its legal spellings;
+# omission is NOT a silent empty baseline and NOT a way to opt out.
+#
+# The five UNION keys — `pure_trees`, `target_dirs`, `source_tree_prefixes`,
+# `dataclasses_tree`, `neutral_hook_body_path` — are the ones whose value IS a
+# check's scan universe, so a bare `[]` / `""` would make that check scan
+# NOTHING and exit 0. Each therefore carries a real value or exactly ONE
+# blessed variant (`not_applicable`, `superseded_by`, `unarmed_until`,
+# `convention_not_adopted`) with its reason in the PARSED VALUE rather than in
+# a comment no checker can read.
+#
+# Every OTHER role key keeps a bare `[]` as a LEGITIMATE spelling: those are
+# exemption / severity predicates whose consuming checks derive the universe
+# from `resolve_check_universe()`, so an empty value makes them STRICTER
+# rather than blinder.
+[tool.livespec_dev_tooling]
+# Not armed at scaffold time: with no first-party product `.py` in the
+# universe the flag would be a claim about a set that does not exist. Arm it
+# in the same pass that lands a Python product surface, after measuring every
+# file against the 250-LLOC ceiling. This is a NOT-YET-EARNED severity
+# increase, never a bypass.
+file_lloc_hard_gate = false
+plan_lifecycle_anchor = true
+scenario_tiers = ["tests.e2e-cli", "tests.e2e", "tests.integration", "tests.consumer", "tests.prompts", "tests.dev-tooling"]
+# The repo-local structural check is the only first-party Python tree today.
+source_trees = [
+    "dev-tooling",
+]
+# No separate io tree.
+io_trees = []
+# This Driver ships thin bindings, not spec-side command modules.
+commands_trees = []
+# NOT APPLICABLE: this Driver ships thin SKILL.md bindings plus a TypeScript
+# extension, so there is no pure parse/validate Python layer for the
+# mutation / property-based-testing / API-result gates to scan.
+pure_trees = { not_applicable = "this Driver ships thin bindings and a TypeScript extension, not a pure parse/validate Python layer" }
+covered_trees = []
+# SUPERSEDED, not not-applicable: the concept applies and IS satisfied by the
+# git-derived first-party universe (`resolve_check_universe`) rather than by a
+# declared target-dir list.
+target_dirs = { superseded_by = "git-derived first-party universe owns this repo's Python coverage" }
+source_tree_prefixes = [
+    "dev-tooling/",
+]
+tests_tree_prefix = "tests/"
+mirror_pairings = [
+    { source_tree = "dev-tooling", test_tree = "tests/dev-tooling" },
+]
+# NOT APPLICABLE: this repo has no schemas/dataclasses layer.
+dataclasses_tree = { not_applicable = "this repo has no schemas/dataclasses layer" }
+# NOT APPLICABLE: the single-sourced `no_shadow_ledger.py` neutral hook body is
+# a PYTHON Driver-shipped hook. Per livespec/SPECIFICATION/contracts.md
+# §"Driver-shipped hooks" (v208) the pi Driver ships exactly ONE sanctioned
+# extension — the TypeScript `tool_call`-blocking footgun guard — and NO
+# auto-memory guard, so there is no Python hook body here to hold identical.
+neutral_hook_body_path = { not_applicable = "the pi Driver ships one TypeScript footgun-guard extension and no Python hook bodies" }
+subprocess_spawn_allowlist = []
+supervisor_entry_files = []
+
+# ---------------------------------------------------------------------------
+# Coverage — first-party Python bodies must be measured in-process at 100%.
+# ---------------------------------------------------------------------------
+
+[tool.coverage.run]
+branch = true
+source = ["dev-tooling"]
+omit = [
+    "*/.venv/*",
+    "*/site-packages/*",
+    "*/__pycache__/*",
+]
+
+[tool.coverage.report]
+fail_under = 100
+show_missing = true
+skip_covered = false
+exclude_also = [
+    "if __name__ == .__main__.:",
+]

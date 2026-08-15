@@ -1,0 +1,50 @@
+### Project ignores
+tmp/
+
+# Worktree-discipline pack — installed from the livespec-dev-tooling package
+# (the single canonical source) into dev-tooling/ at bootstrap, NEVER tracked
+# here, mirroring how the commit-refuse hooks are installed into the untracked
+# shared .git/hooks/ dir. The pack is four files: the two executable shell
+# scripts plus the `worktree.just` and `branch-protection.just` recipe
+# fragments the root justfile `import?`s. `just bootstrap` materializes them
+# via the `worktree-pack` LOCAL obligation row.
+/dev-tooling/worktree-lib.sh
+/dev-tooling/branch-protection.sh
+/dev-tooling/worktree.just
+/dev-tooling/branch-protection.just
+.claude/settings.local.json
+.claude/worktrees/
+.idea/
+
+# Playwright MCP browser-tool scratch (page snapshots, console logs) —
+# per-session, never durable state.
+.playwright-mcp/
+
+### Python toolchain artifacts
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+
+### Node / TypeScript toolchain artifacts
+# The ONE sanctioned pi extension this Driver ships is a TypeScript
+# `tool_call`-blocking footgun guard (livespec SPECIFICATION/contracts.md
+# §"Driver-shipped hooks"). Its build/dependency artifacts are never tracked.
+node_modules/
+dist/
+
+### UV local state
+.venv/
+
+### Beads / Dolt
+# Per-clone bd state (Dolt working copy, lockfiles, runtime artifacts,
+# per-machine metadata.json) is excluded by .beads/.gitignore (tracked
+# itself, once the tenant is provisioned). `.beads/config.yaml` IS tracked:
+# it carries the server-mode connection block for the livespec-driver-pi
+# Dolt tenant with NO per-machine project_id and NO password (the tenant
+# password is supplied via the BEADS_DOLT_PASSWORD env var at bd-call time).
+# The beads tenant is PENDING (see AGENTS.md §"Bootstrap status"), so no
+# `.beads/` tree exists yet.
+.beads-credential-key
+*.env.local
