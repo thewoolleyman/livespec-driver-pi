@@ -1,0 +1,166 @@
+// Project-local livespec configuration for livespec-driver-pi.
+//
+// This repo is the reference pi Driver for the livespec family: the thin,
+// agent-runtime-specific bindings through which a human drives the livespec
+// spec lifecycle interactively under the pi coding agent. It is the
+// pi-runtime analogue of livespec-driver-claude and livespec-driver-codex.
+//
+// Scope discipline: this repo's own spec (once seeded at SPECIFICATION/) will
+// govern ONLY what the Driver owns. The operation prose, the reference
+// spec-side CLIs, the JSON schemas, and the built-in templates all live in
+// livespec core; this tree defers to core by citation and never restates the
+// upstream contract. When any rule here appears to conflict with livespec
+// core's SPECIFICATION/, the upstream rule wins.
+//
+// Authority: livespec/SPECIFICATION/spec.md
+//   §"Contract + reference implementations architecture" (the Driver is the
+//   thin, agent-runtime-specific binding layer; core is agnostic to it),
+//   livespec/SPECIFICATION/contracts.md §"Plugin distribution" and
+//   §"Driver-shipped hooks", and livespec/SPECIFICATION/
+//   non-functional-requirements.md §"pi dogfooding compatibility",
+//   §"pi dogfooding contracts", §"pi dogfooding constraints" (ratified v208).
+//
+// This repo's own impl tracking lives in a per-repo beads/Dolt TENANT
+// database on the shared dolt-server (tenant name "livespec-driver-pi"),
+// via livespec-orchestrator-beads-fabro, mirroring the livespec-driver-claude
+// and livespec-driver-codex pattern (tenant name == repo name; TCP-only, NO
+// socket key). The connection block below MIRRORS the repo's committed
+// .beads/config.yaml; the tenant password is supplied via the
+// BEADS_DOLT_PASSWORD environment variable at bd-call time and is NEVER
+// committed here.
+{
+  "template": "livespec",
+  "spec_root": "SPECIFICATION",
+  "implementation": { "plugin": "livespec-orchestrator-beads-fabro" },
+  // Planning/work-item-resolution registry. These targets are the repo slugs
+  // accepted by cross-tenant DependsOnEntry refs (`sibling_work_item`,
+  // `pull_request`, and `branch`).
+  "cross_repo_targets": {
+    "livespec-dev-tooling": {
+      "github_url": "https://github.com/thewoolleyman/livespec-dev-tooling",
+      "local_clone": "/data/projects/livespec-dev-tooling",
+      "default_branch": "master"
+    }
+  },
+  // Credential-injection wrapper (fleet default) prefixed to the beads CLIs so a bare invocation self-heals its tenant secret.
+  "credential_wrapper": ["/usr/local/bin/with-livespec-env.sh", "--"],
+  // Declared agent-runtime harnesses for the Conformance Pattern's
+  // cross-harness plugin-resolution concern (concern #2), read by
+  // livespec-dev-tooling's check-plugin-resolution Verifier
+  // (livespec/SPECIFICATION/non-functional-requirements.md §"Conformance
+  // Pattern"). The Claude /livespec:* surface ships from
+  // livespec-driver-claude and the Codex one from livespec-driver-codex, so
+  // both are declared EXEMPT here.
+  //
+  // `pi` — this repo's OWN supported harness — is deliberately NOT declared
+  // yet. The shared Verifier fails closed on an unknown harness key, and its
+  // `_KNOWN_HARNESSES` set in livespec-dev-tooling is currently
+  // {"claude", "codex"}; declaring "pi" before that set is extended would
+  // fail check-plugin-resolution with a garbled-declaration error rather than
+  // verify anything. Extending `_KNOWN_HARNESSES` (plus a pi runner in
+  // `_build_live_runners`) is upstream work in livespec-dev-tooling; adding
+  // the `"pi": { "status": "supported", "canonical_command": "..." }` entry
+  // here is the follow-up that lands with it.
+  "harnesses": {
+    "claude": {
+      "status": "exempt",
+      "reason": "livespec-driver-pi is the pi Driver; the Claude /livespec:* surface ships from livespec-driver-claude"
+    },
+    "codex": {
+      "status": "exempt",
+      "reason": "livespec-driver-pi is the pi Driver; the Codex /livespec:* surface ships from livespec-driver-codex"
+    }
+  },
+  // ACTIVE spec_governance overrides. Non-interactive propose-change is armed
+  // fleet-wide (maintainer-directed); every other lever stays at its shipped
+  // default, documented in the commented reference block below.
+  "spec_governance": {
+    "propose_change_mode": "batch"
+  },
+  // Optional — spec_governance: policy levers for livespec's spec-side
+  // operations. The commented defaults below are derived from the shipped
+  // spec-governance manifest; leaving this block commented arms nothing, so
+  // every operation uses the same safe defaults it would use with no
+  // spec_governance block at all.
+  // To enable any key, add the block as a real key above (a comma after the
+  // `harnesses` block) and keep only the entries this repo intentionally
+  // overrides:
+  //   "spec_governance": {
+  //     // propose_change_mode (enum; allowed: "interactive", "batch")
+  //     "propose_change_mode": "interactive",
+  //     // critique_mode (enum; allowed: "interactive", "batch")
+  //     "critique_mode": "interactive",
+  //     // in_flight_alignment (enum; allowed: "prompt", "default-align")
+  //     "in_flight_alignment": "prompt",
+  //     // doctor_dispositions (map; allowed values: "fix-now",
+  //     // "capture-as-work-item", "propose-change", "defer", "dismiss")
+  //     "doctor_dispositions": {},
+  //     // revise_decision_mode (enum; allowed: "manual", "delegated",
+  //     // "consensus"; per-proposal override: decision_policy)
+  //     "revise_decision_mode": "manual",
+  //     // drift_acceptance_mode (enum; allowed: "human", "consensus")
+  //     "drift_acceptance_mode": "human",
+  //     // ratification_review (enum; allowed: "manual-spawn", "auto-spawn";
+  //     // per-proposal override: ratification_review_policy)
+  //     "ratification_review": "manual-spawn",
+  //     // ratification_reviewer_model (string; no enumerated allowed values)
+  //     "ratification_reviewer_model": null,
+  //     // ratification_min_review_age_seconds (integer; minimum: 1)
+  //     "ratification_min_review_age_seconds": 1
+  //   }
+  //
+  "livespec-driver-pi": {
+    "compat": {
+      // semver range and pinned tag against livespec core. The pin tracks
+      // core's latest RELEASE tag (never raw master); the cross-repo
+      // release-dispatch fan-out rewrites it on each new core release.
+      "livespec": ">=0.1.0,<1.0.0",
+      "pinned": "v0.33.6"
+    }
+  },
+  "livespec-orchestrator-beads-fabro": {
+    "format": "beads",
+    "compat": {
+      "livespec": ">=0.1.0,<1.0.0",
+      "pinned": "v0.33.6"
+    },
+    // Per-repo beads tenant CONNECTION block, mirrored by .beads/config.yaml.
+    // `prefix` == `tenant` == `database` == `server_user` == this repo's
+    // name ("livespec-driver-pi") is the load-bearing tenant-identity rule.
+    // TCP-only: NO `socket` key — the dolt unix socket dir is 0750 dolt:dolt
+    // and inaccessible to the sandboxed caller, so the connection goes over
+    // 127.0.0.1:3307. The tenant PASSWORD is deliberately ABSENT (supplied
+    // via BEADS_DOLT_PASSWORD at call time). `fake` is false so the committed
+    // config describes the REAL connection; CI and tests set
+    // LIVESPEC_BEADS_FAKE=1 to force the hermetic in-memory backend.
+    "connection": {
+      "tenant": "livespec-driver-pi",
+      "prefix": "livespec-driver-pi",
+      "database": "livespec-driver-pi",
+      "server_user": "livespec-driver-pi",
+      "server_host": "127.0.0.1",
+      "server_port": 3307,
+      "fake": false
+    },
+    // Autonomous-mode levers, mirroring every other fleet member
+    // (maintainer-directed 2026-07-20). Two of the three policy settings in
+    // livespec/SPECIFICATION/contracts.md §"The three policy settings" are
+    // moved off their safe defaults so ready work is ADMITTED and ACCEPTED
+    // without a human valve:
+    //   auto_approve_ready: true      — pending-approval → ready with no human.
+    //   acceptance_mode: "ai-only"    — post-merge acceptance without a human.
+    // The third lever, `merge_on_review_cap`, deliberately STAYS at its safe
+    // `false` default and is NOT listed here: a review that cannot converge
+    // within `review_fix_cap` rounds is precisely the case that must reach a
+    // human. A design-human-gated (spec-change-tier) item still cannot
+    // auto-approve regardless of these.
+    //
+    // EDIT THIS BLOCK BY HAND. Do NOT use `drive --action set-config:<k>:<v>`:
+    // that surface round-trips the file through json.dumps and silently strips
+    // every comment here while reporting green — tracked as bd-ib-lmi5.
+    "dispatcher": {
+      "auto_approve_ready": true,
+      "acceptance_mode": "ai-only"
+    }
+  }
+}
