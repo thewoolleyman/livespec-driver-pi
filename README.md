@@ -21,6 +21,7 @@ dogfooding contracts", §"pi dogfooding constraints").
 | `lib/resolve-core-root.sh` | The single realization of livespec-CORE-root resolution. All eight bindings call it; none restates the algorithm. |
 | `extensions/livespec-footgun-guard.ts` | The ONE sanctioned first-party pi extension: the `tool_call`-blocking footgun guard, required before any mutating operation is exercised. |
 | `package.json` | The pi package manifest (`pi.skills`, `pi.extensions`, the `pi-package` keyword). |
+| `SPECIFICATION/` | This repo's own live livespec spec, governing the Driver-owned seam. Dogfooded — it evolves through the same propose-change / revise loop every governed project uses. |
 | `dev-tooling/`, `justfile`, `check-targets.txt`, `.github/` | The family-standard enforcement suite, per-target matrix CI, and the fleet shim / release-automation workflows. |
 
 ## Install
@@ -64,8 +65,20 @@ points at `.claude-plugin/skills/*` — core ships no such tree. Edit core's
 `prose/<name>.md` for BEHAVIOR; edit a binding here only for pi mechanics.
 `check-pi-package-structure` is the mechanical guard over all of that.
 
+## The spec
+
+`SPECIFICATION/` is this repo's own live spec. It governs ONLY the Driver-owned
+seam — the pi package manifest, the eight-binding set, the core-root resolution
+chain, config-named CLI dispatch, and the footgun-guard extension — and defers
+to livespec core by citation for everything upstream. `check-doctor-static` runs
+core's static doctor phase over it in CI, resolving core at the release tag
+`.livespec.jsonc` pins.
+
+Start at `SPECIFICATION/spec.md` for the shape, then `SPECIFICATION/contracts.md`
+for the surface a change would have to preserve.
+
 ## Still pending
 
-Own `SPECIFICATION/` tree, the beads tenant, the three repo secrets, branch
-protection, and fleet-manifest registration. See `AGENTS.md` §"Bootstrap
-status" for the current state and the exact remaining steps.
+The three repo secrets and fleet-manifest registration. See
+`AGENTS.md` "Bootstrap status" for the current state and the exact remaining
+steps.

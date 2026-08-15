@@ -91,8 +91,8 @@ another operation.
 
 ## Mutating-operation precondition
 
-`prune-history` MUTATES the specification tree. Per livespec
-`SPECIFICATION/contracts.md` §"Driver-shipped hooks", a mutating pi operation
+`prune-history` MUTATES the specification tree. Per the Driver-shipped-hooks
+contract in livespec `SPECIFICATION/contracts.md`, a mutating pi operation
 MUST NOT be exercised unless this Driver's `tool_call` footgun-guard extension
 (`extensions/livespec-footgun-guard.ts`) is loaded. If pi reports that the
 package's extensions are not loaded — most often the project-trust gate under a

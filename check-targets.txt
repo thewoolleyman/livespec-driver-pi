@@ -63,3 +63,4 @@ check-lint
 check-format
 check-types
 check-coverage
+check-doctor-static

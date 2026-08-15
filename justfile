@@ -367,6 +367,14 @@ check-spec-governance-default-block:
 check-pi-package-structure:
     uv run python dev-tooling/check-pi-package-structure
 
+# livespec core's STATIC doctor phase over this repo's own SPECIFICATION/ tree.
+# Its own dedicated CI job rather than a matrix leg, because it is the one
+# target needing a SECOND checkout — livespec core, at the release tag
+# .livespec.jsonc pins — so the spec is checked against the contract version
+# this Driver claims compatibility with.
+check-doctor-static:
+    bash dev-tooling/check-doctor-static.sh
+
 check-plan-thread-anchor-declared:
     uv run python -m livespec_dev_tooling.checks.plan_thread_anchor_declared
 

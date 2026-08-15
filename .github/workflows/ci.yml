@@ -326,6 +326,73 @@ jobs:
       - name: just check-red-green-replay
         run: just check-red-green-replay
 
+  # livespec core's STATIC doctor phase over this repo's own SPECIFICATION/
+  # tree. The checker (doctor_static.py — self-contained, bare python3) ships
+  # with CORE, not with this Driver, so this job checks core out at the release
+  # tag THIS repo pins (.livespec.jsonc compat.pinned) and points the recipe at
+  # it via LIVESPEC_CORE_PLUGIN_ROOT. It gets its OWN job rather than a matrix
+  # leg because it needs that second checkout, which no other target does.
+  check-doctor-static:
+    name: check-doctor-static
+    runs-on: ${{ fromJSON(vars.CI_RUNNER_LABELS || '["ubuntu-latest"]') }}
+    container:
+      image: ghcr.io/thewoolleyman/livespec-fabro-sandbox:python-v1.20.6
+    env:
+      MISE_DATA_DIR: /root/.local/share/mise
+      MISE_NOT_FOUND_AUTO_INSTALL: "0"
+      GITHUB_TOKEN: ${{ github.token }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # The '*' also covers the .livespec-core checkout below. See the check
+      # job for the full hosted container root-vs-checkout uid rationale.
+      - name: Trust workspace for git (hosted container root-vs-checkout uid)
+        run: git config --global --add safe.directory '*'
+
+      - name: mise trust + install (baked tools — install is a near-no-op)
+        run: |
+          mise trust
+          mise install
+
+      - name: Resolve pinned livespec core ref (.livespec.jsonc compat.pinned)
+        id: corepin
+        run: |
+          pinned="$(grep -oE '"pinned"[[:space:]]*:[[:space:]]*"[^"]*"' .livespec.jsonc | head -1 | sed -E 's/.*:[[:space:]]*"([^"]*)".*/\1/')"
+          echo "ref=${pinned:-master}" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout livespec core at the pinned ref
+        uses: actions/checkout@v4
+        with:
+          repository: thewoolleyman/livespec
+          ref: ${{ steps.corepin.outputs.ref }}
+          path: .livespec-core
+
+      - name: just check-doctor-static
+        run: |
+          # In a container job, github.workspace (context) may be the HOST path;
+          # $GITHUB_WORKSPACE (env) is the in-container mount, so derive the core
+          # plugin root from it to stay container-correct.
+          export LIVESPEC_CORE_PLUGIN_ROOT="${GITHUB_WORKSPACE}/.livespec-core/.claude-plugin"
+          # Expose the SAME pinned core checkout as a sibling CLONE so
+          # cross-repo citation resolution works on the runner.
+          # `.livespec.jsonc` `cross_repo_targets.livespec.local_clone` is the
+          # host-absolute /data/projects/livespec, which cannot exist here.
+          # That matters more than it looks: an unreadable clone file is NOT
+          # treated as "clone unavailable" — no_cross_spec_reference maps it to
+          # an EMPTY heading set, and _validated_external_references then DROPS
+          # every external_references entry for that repo, failing allowlisted
+          # citations with the misleading "is not allowlisted". Pointing
+          # LIVESPEC_SIBLING_CLONES_ROOT at a real checkout (it takes precedence
+          # over local_clone) makes CI validate citations against core's ACTUAL
+          # headings instead — strictly stronger than the allowlist fallback.
+          mkdir -p "${GITHUB_WORKSPACE}/.livespec-siblings"
+          ln -sfn "${GITHUB_WORKSPACE}/.livespec-core" \
+            "${GITHUB_WORKSPACE}/.livespec-siblings/livespec"
+          export LIVESPEC_SIBLING_CLONES_ROOT="${GITHUB_WORKSPACE}/.livespec-siblings"
+          just check-doctor-static
+
   export-telemetry:
     name: export-telemetry
     needs: [check, red-green-replay]
@@ -352,14 +419,9 @@ jobs:
   # gate (no external action, no direct tool invocation): `always()` runs it
   # even when a dependency failed, and the step fails the job iff any
   # dependency failed or was cancelled.
-  #
-  # The `check-doctor-static` job the sibling Drivers carry is deliberately
-  # ABSENT here and MUST be added to both the job set and this `needs:` list by
-  # the pass that seeds SPECIFICATION/ — until that tree exists there is
-  # nothing for doctor-static to read.
   ci-green:
     name: ci-green
-    needs: [check, red-green-replay]
+    needs: [check, check-doctor-static, red-green-replay]
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:

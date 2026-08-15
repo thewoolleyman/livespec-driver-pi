@@ -1,0 +1,296 @@
+[
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "spec.md",
+    "heading": "## Purpose",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "spec.md",
+    "heading": "## Scope boundary",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "spec.md",
+    "heading": "## Terminology",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "spec.md",
+    "heading": "## Public surface",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "spec.md",
+    "heading": "## Lifecycle and evolution",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "contracts.md",
+    "heading": "## pi package manifest",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "contracts.md",
+    "heading": "## Skill-binding set",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "contracts.md",
+    "heading": "## Core-root resolution",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "contracts.md",
+    "heading": "## Config-named CLI dispatch",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "contracts.md",
+    "heading": "## Footgun-guard extension",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "contracts.md",
+    "heading": "## Versioning",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "constraints.md",
+    "heading": "## Inherited from livespec",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "constraints.md",
+    "heading": "## Binding constraints",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "constraints.md",
+    "heading": "## Resolution-substrate constraints",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "constraints.md",
+    "heading": "## Guard constraints",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "constraints.md",
+    "heading": "## Structural-check constraints",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "constraints.md",
+    "heading": "## Forbidden patterns",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "non-functional-requirements.md",
+    "heading": "## Boundary",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "non-functional-requirements.md",
+    "heading": "## Spec",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "non-functional-requirements.md",
+    "heading": "## Contracts",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "non-functional-requirements.md",
+    "heading": "## Constraints",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "non-functional-requirements.md",
+    "heading": "## Scenarios",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "scenarios.md",
+    "heading": "## Scenario: the installed Driver exposes the eight livespec operations",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "scenarios.md",
+    "heading": "## Scenario: core-root resolution honors the operator override",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "scenarios.md",
+    "heading": "## Scenario: core-root resolution falls back to the governed-project checkout",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "scenarios.md",
+    "heading": "## Scenario: core-root resolution falls back to the project-scope package clone",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "scenarios.md",
+    "heading": "## Scenario: core-root resolution falls back to the user-scope package clone",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "scenarios.md",
+    "heading": "## Scenario: a clone present but without prose fails loudly rather than resolving",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "scenarios.md",
+    "heading": "## Scenario: an override that resolves nothing is reported as a configuration error",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "scenarios.md",
+    "heading": "## Scenario: an untrusted non-interactive invocation resolves nothing",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "scenarios.md",
+    "heading": "## Scenario: the guard blocks a hook-bypassing commit or push",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "scenarios.md",
+    "heading": "## Scenario: the guard blocks an invocation that disables lefthook",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "scenarios.md",
+    "heading": "## Scenario: the guard blocks setting a checkout bare",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "scenarios.md",
+    "heading": "## Scenario: the guard blocks a write at a livespec primary checkout",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "scenarios.md",
+    "heading": "## Scenario: the guard passes through a forbidden string carried as data",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "scenarios.md",
+    "heading": "## Scenario: a guard error yields a pass-through rather than a block",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "scenarios.md",
+    "heading": "## Scenario: prune-history is never auto-activated",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "scenarios.md",
+    "heading": "## Scenario: a mutating operation stops when the guard is not loaded",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "scenarios.md",
+    "heading": "## Scenario: the structural gate rejects a missing or extra binding",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "scenarios.md",
+    "heading": "## Scenario: the structural gate rejects a non-canonical wrapper invocation",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "scenarios.md",
+    "heading": "## Scenario: the structural gate rejects a manifest naming an absent resource directory",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "scenarios.md",
+    "heading": "## Scenario: a commit at the primary checkout is refused",
+    "test": "TODO",
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+  }
+]
