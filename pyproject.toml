@@ -139,10 +139,14 @@ markers = [
 file_lloc_hard_gate = false
 plan_lifecycle_anchor = true
 scenario_tiers = ["tests.e2e-cli", "tests.e2e", "tests.integration", "tests.consumer", "tests.prompts", "tests.dev-tooling"]
-# The repo-local structural check is the only first-party Python tree today.
-source_trees = [
-    "dev-tooling",
-]
+# EMPTY on purpose, and empty is the STRICT spelling for this key (its
+# consuming checks derive their universe from `resolve_check_universe()`, so an
+# empty value narrows the exemption rather than blinding a scan). This repo has
+# no first-party product source tree yet: the pi Driver's product surface is
+# eight thin bindings plus a TypeScript extension, neither landed. `dev-tooling/`
+# is deliberately NOT listed — matching the sibling Drivers, which classify it as
+# host-provisioning tooling rather than product source.
+source_trees = []
 # No separate io tree.
 io_trees = []
 # This Driver ships thin bindings, not spec-side command modules.
@@ -156,13 +160,16 @@ covered_trees = []
 # git-derived first-party universe (`resolve_check_universe`) rather than by a
 # declared target-dir list.
 target_dirs = { superseded_by = "git-derived first-party universe owns this repo's Python coverage" }
-source_tree_prefixes = [
-    "dev-tooling/",
-]
+# UNARMED, not not-applicable: the concept DOES apply to a Driver repo — the
+# sibling Drivers scope it to their shipped hook tree — but this repo's product
+# surface has not landed, so there is no prefix to name. The pass that lands the
+# plugin bundle (and any Python it brings) sets this to the real prefixes; the
+# co-staging gate `commit_pairs_source_and_test` arms itself the moment it does.
+source_tree_prefixes = { unarmed_until = "the pi Driver's product surface (eight skills + the TypeScript footgun-guard extension) lands" }
 tests_tree_prefix = "tests/"
-mirror_pairings = [
-    { source_tree = "dev-tooling", test_tree = "tests/dev-tooling" },
-]
+# No pairings yet: there is no source tree to pair, and naming a `tests/` subtree
+# that does not exist fails check-source-trees-scoped-to-consumer.
+mirror_pairings = []
 # NOT APPLICABLE: this repo has no schemas/dataclasses layer.
 dataclasses_tree = { not_applicable = "this repo has no schemas/dataclasses layer" }
 # NOT APPLICABLE: the single-sourced `no_shadow_ledger.py` neutral hook body is
