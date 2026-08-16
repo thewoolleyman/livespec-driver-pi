@@ -37,6 +37,12 @@ dist/
 ### UV local state
 .venv/
 
+### pi package caches
+# `.pi/settings.json` (the committed dogfooding config) is tracked; the git
+# package clones `pi install ... -l` materializes under `.pi/git/` — each a
+# full clone plus its own node_modules — are per-machine cache, never tracked.
+.pi/git/
+
 ### Beads / Dolt
 # Per-clone bd state (Dolt working copy, lockfiles, runtime artifacts,
 # per-machine metadata.json) is excluded by .beads/.gitignore (tracked
