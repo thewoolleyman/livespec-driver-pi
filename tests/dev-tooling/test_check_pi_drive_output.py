@@ -90,3 +90,29 @@ def test_cli_maps_failure_to_nonzero_and_reports_reason(tmp_path: Path, capsys: 
     captured = capsys.readouterr()
     assert captured.out == ""
     assert "pi-output-model-call-failed" in captured.err
+
+
+def test_cli_maps_clean_drive_to_zero_and_reports_success(tmp_path: Path, capsys: Any) -> None:
+    check = _load()
+    stdout_path = tmp_path / "stdout.txt"
+    stderr_path = tmp_path / "stderr.txt"
+    _ = stdout_path.write_text("completed /skill:livespec-help\n", encoding="utf-8")
+    _ = stderr_path.write_text("", encoding="utf-8")
+
+    assert (
+        check.main(
+            argv=[
+                "--pi-exit-code",
+                "0",
+                "--stdout",
+                str(stdout_path),
+                "--stderr",
+                str(stderr_path),
+            ]
+        )
+        == 0
+    )
+
+    captured = capsys.readouterr()
+    assert "pi-drive-ok" in captured.out
+    assert captured.err == ""
