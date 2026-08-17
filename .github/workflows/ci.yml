@@ -83,7 +83,7 @@ jobs:
         # check-ci-matrix-completeness passes, EXCEPT two deliberate
         # exclusions:
         #   - check-master-ci-green / check-branch-protection-alignment /
-        #     check-plan-thread-epic-parity — WORLD-GATE checks (they verify
+        #     check-plan-epic-parity — WORLD-GATE checks (they verify
         #     master's CI, protection state, or the ledger, not the PR change;
         #     they enforce at pre-push under the maintainer's admin-scoped
         #     credentials and are excluded from the CI-mirror requirement per
@@ -134,8 +134,8 @@ jobs:
           - check-partition-completeness
           - check-pbt-coverage-pure-modules
           - check-per-file-coverage
-          - check-plan-thread-anchor-declared
-          - check-plan-thread-no-tombstone
+          - check-plan-anchor-declared
+          - check-plan-no-tombstone
           - check-plugin-resolution
           - check-primary-checkout-commit-refuse-hook-installed
           - check-private-calls
