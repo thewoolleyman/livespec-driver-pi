@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/thewoolleyman/livespec-driver-pi/compare/v0.2.0...v0.2.1) (2026-08-17)
+
+
+### Bug Fixes
+
+* **check:** coverage dedup hardening — clean-env producer + consume-once consumer ([20c15f3](https://github.com/thewoolleyman/livespec-driver-pi/commit/20c15f3fa3ff38ef3cb58fa3a8e0ef60c7e587e6))
+
 ## [0.2.0](https://github.com/thewoolleyman/livespec-driver-pi/compare/v0.1.0...v0.2.0) (2026-08-16)
 
 
