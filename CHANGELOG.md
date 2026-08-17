@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.3](https://github.com/thewoolleyman/livespec-driver-pi/compare/v0.2.2...v0.2.3) (2026-08-17)
+
+
+### Bug Fixes
+
+* classify pi drive output failures ([7814190](https://github.com/thewoolleyman/livespec-driver-pi/commit/781419056e01273eb99fa36e9021abc471b5e0d7))
+
 ## [0.2.2](https://github.com/thewoolleyman/livespec-driver-pi/compare/v0.2.1...v0.2.2) (2026-08-17)
 
 
