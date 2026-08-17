@@ -1,6 +1,6 @@
 {
   "name": "livespec-driver-pi",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "pi Driver for livespec — eight thin livespec-<operation> SKILL.md bindings plus the sanctioned tool_call footgun-guard extension",
   "private": true,
   "keywords": [
