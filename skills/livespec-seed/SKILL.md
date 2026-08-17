@@ -1,6 +1,6 @@
 ---
 name: livespec-seed
-description: Author the initial natural-language livespec specification for a new project, populating the chosen template's spec_root layout. Use when starting a brand-new spec in an empty SPECIFICATION/ tree, or when the user asks to "seed a livespec spec" or "set up a livespec". Mutating: it writes the initial spec tree.
+description: Author the initial natural-language livespec specification for a new project, populating the chosen template's spec_root layout. Use when starting a brand-new spec in an empty SPECIFICATION/ tree, or when the user asks to "seed a livespec spec" or "set up a livespec". This mutating operation writes the initial spec tree.
 allowed-tools: bash read write edit
 ---
 

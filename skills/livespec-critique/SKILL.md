@@ -1,6 +1,6 @@
 ---
 name: livespec-critique
-description: Critique an existing livespec specification or a pending proposed change, surfacing ambiguities, contradictions, and missing rules as findings the user can act on. Use when the user asks to critique the spec or find issues in it. Mutating: it can land its findings as a proposed change.
+description: Critique an existing livespec specification or a pending proposed change, surfacing ambiguities, contradictions, and missing rules as findings the user can act on. Use when the user asks to critique the spec or find issues in it. This mutating operation can land its findings as a proposed change.
 allowed-tools: bash read write edit
 ---
 
