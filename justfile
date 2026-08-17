@@ -311,6 +311,8 @@ check-pbt-coverage-pure-modules:
 # its repo-root `.coverage` once and DELETES it (consume-once — a later
 # standalone run can never report from stale data); absent the file
 # (standalone/CI) it runs the clean suite itself first.
+# No-errexit deviation: explicit exit handling preserves the consume-once
+# cleanup on failure (errexit would skip the rm and strand stale data).
 check-per-file-coverage:
     #!/usr/bin/env bash
     set -uo pipefail
