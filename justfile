@@ -387,6 +387,12 @@ check-spec-governance-default-block:
 check-pi-package-structure:
     uv run python dev-tooling/check-pi-package-structure
 
+# Regression gate for pi's unreliable raw exit status: unattended drives must
+# classify captured stdout/stderr and trust this tool's exit code instead of
+# `pi -p`'s own status when a model-call failure is printed.
+check-pi-drive-output:
+    uv run pytest tests/dev-tooling/test_check_pi_drive_output.py
+
 # livespec core's STATIC doctor phase over this repo's own SPECIFICATION/ tree.
 # Its own dedicated CI job rather than a matrix leg, because it is the one
 # target needing a SECOND checkout — livespec core, at the release tag

@@ -59,6 +59,7 @@ check-vendor-manifest
 check-wrapper-shape
 check-spec-governance-default-block
 check-pi-package-structure
+check-pi-drive-output
 check-lint
 check-format
 check-types

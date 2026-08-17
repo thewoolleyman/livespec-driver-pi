@@ -1,0 +1,98 @@
+#!/usr/bin/env python3
+"""check-pi-drive-output — classify unattended pi drive transcripts.
+
+The pi CLI has been observed printing a model-call 400 failure while still
+exiting 0. Automation that drives `/skill:livespec-<operation>` therefore must
+not branch on the raw pi process status alone: it must classify the captured
+output shape and use THIS tool's exit status as the trusted signal.
+
+Pass the raw pi exit code plus captured stdout/stderr files. The check exits 0
+only when the raw process status was 0 and no fatal model-call output was
+recognized; it exits 2 otherwise.
+"""
+
+import argparse
+import json
+import re
+import sys
+from collections.abc import Sequence
+from dataclasses import asdict, dataclass
+from pathlib import Path
+
+__all__ = [
+    "DriveClassification",
+    "classify_drive",
+    "main",
+]
+
+_MODEL_FAILURE_PATTERNS = (
+    re.compile(
+        r"^\s*(?:error|apierror|badrequesterror|request failed|model call failed|"
+        r"failed to call model)\b.*\b(?:400|bad request)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(r"^\s*(?:400\b.*\bbad request\b|bad request\b.*\b400\b)", re.IGNORECASE),
+)
+
+
+@dataclass(frozen=True, kw_only=True)
+class DriveClassification:
+    ok: bool
+    reason: str
+    matched_line: str
+
+
+def classify_drive(*, pi_exit_code: int, stdout: str, stderr: str) -> DriveClassification:
+    if pi_exit_code != 0:
+        return DriveClassification(
+            ok=False,
+            reason="pi-process-exited-nonzero",
+            matched_line=f"pi exited {pi_exit_code}",
+        )
+
+    for line in _candidate_lines(stderr=stderr, stdout=stdout):
+        if _is_model_failure_line(line=line):
+            return DriveClassification(
+                ok=False,
+                reason="pi-output-model-call-failed",
+                matched_line=line.strip(),
+            )
+
+    return DriveClassification(ok=True, reason="pi-drive-ok", matched_line="")
+
+
+def _candidate_lines(*, stderr: str, stdout: str) -> list[str]:
+    return [*stderr.splitlines(), *stdout.splitlines()]
+
+
+def _is_model_failure_line(*, line: str) -> bool:
+    return any(pattern.search(line) is not None for pattern in _MODEL_FAILURE_PATTERNS)
+
+
+def _parse_args(*, argv: Sequence[str] | None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Classify a captured pi drive transcript into a trustworthy exit status."
+    )
+    parser.add_argument("--pi-exit-code", required=True, type=int)
+    parser.add_argument("--stdout", required=True, type=Path)
+    parser.add_argument("--stderr", required=True, type=Path)
+    return parser.parse_args(argv)
+
+
+def main(*, argv: Sequence[str] | None = None) -> int:
+    args = _parse_args(argv=argv)
+    result = classify_drive(
+        pi_exit_code=args.pi_exit_code,
+        stdout=args.stdout.read_text(encoding="utf-8"),
+        stderr=args.stderr.read_text(encoding="utf-8"),
+    )
+    payload = json.dumps(asdict(result), sort_keys=True)
+    if result.ok:
+        sys.stdout.write(payload + "\n")
+        return 0
+    sys.stderr.write(payload + "\n")
+    return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
