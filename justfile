@@ -114,11 +114,11 @@ check-no-workflow-edits:
 # the cross-harness plugin-resolution concern (concern #2). It reads the
 # `harnesses` declaration in `.livespec.jsonc` and, in mock mode, asserts
 # declaration integrity (every declared harness has a valid status; an
-# exempt harness carries a reason). This repo declares claude and codex
-# EXEMPT — each of those surfaces ships from its own Driver repo — and does
-# NOT yet declare its own `pi` harness, because the shared Verifier's known-
-# harness set does not include it (see `.livespec.jsonc` for the full note
-# and the upstream follow-up). Authority: livespec/SPECIFICATION/
+# exempt harness carries a reason). This repo declares its own `pi`
+# harness SUPPORTED (the shared Verifier's known-harness set includes it
+# as of livespec-dev-tooling v1.28.x) and declares claude and codex
+# EXEMPT — each of those surfaces ships from its own Driver repo.
+# Authority: livespec/SPECIFICATION/
 # non-functional-requirements.md §"Conformance Pattern".
 check-plugin-resolution:
     uv run python -m livespec_dev_tooling.checks.plugin_resolution
