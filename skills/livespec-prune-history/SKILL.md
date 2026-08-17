@@ -1,6 +1,6 @@
 ---
 name: livespec-prune-history
-description: Destructively prune old vNNN/ snapshots from <spec-root>/history/ to bound history size. Requires explicit user invocation: model-driven invocation is disabled, and a generic mention of history NEVER activates it. Invoked only via /skill:livespec-prune-history or an explicit user request to prune the livespec history.
+description: Destructively prune old vNNN/ snapshots from <spec-root>/history/ to bound history size. Requires explicit user invocation because model-driven invocation is disabled, and a generic mention of history NEVER activates it. Invoked only via /skill:livespec-prune-history or an explicit user request to prune the livespec history.
 allowed-tools: bash read write edit
 disable-model-invocation: true
 ---

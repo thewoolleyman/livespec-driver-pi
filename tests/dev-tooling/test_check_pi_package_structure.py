@@ -152,6 +152,26 @@ def test_no_frontmatter_block_is_reported(tmp_path: Path) -> None:
     assert CHECK.skill_violations(operation="seed", path=path) != []
 
 
+def test_unquoted_colon_space_in_frontmatter_value_is_reported(tmp_path: Path) -> None:
+    root = _conforming_root(tmp_path)
+    path = root / "skills" / "livespec-seed" / "SKILL.md"
+    _write(
+        path,
+        "---\nname: livespec-seed\ndescription: Mutating: it writes files\n---\n\n"
+        "lib/resolve-core-root.sh\n",
+    )
+    assert any(
+        "unquoted ': '" in item for item in CHECK.skill_violations(operation="seed", path=path)
+    )
+
+    _write(
+        path,
+        '---\nname: livespec-seed\ndescription: "Mutating: it writes files"\n---\n\n'
+        "lib/resolve-core-root.sh\n",
+    )
+    assert CHECK.skill_violations(operation="seed", path=path) == []
+
+
 def test_claude_plugin_skills_reference_is_reported(tmp_path: Path) -> None:
     root = _conforming_root(tmp_path)
     path = root / "skills" / "livespec-seed" / "SKILL.md"

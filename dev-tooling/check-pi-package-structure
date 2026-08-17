@@ -62,6 +62,7 @@ _FENCE = "```"
 _WRAPPER_INVOCATION = re.compile(r"bin/[a-z_]+\.py\b")
 _CORE_ROOT_TOKEN = re.compile(r"\$\{?LIVESPEC_CORE_ROOT\}?/scripts/bin/[a-z_]+\.py")
 _TOOL_CALL_REGISTRATION = re.compile(r'pi\.on\(\s*"tool_call"')
+_QUOTED_SCALAR = re.compile(r"""^(['"]).*\1$""")
 
 _GUARD_PREDICATES = {
     "--no-verify": "the --no-verify block",
@@ -71,23 +72,30 @@ _GUARD_PREDICATES = {
 }
 
 
+def _is_quoted_scalar(*, value: str) -> bool:
+    return bool(_QUOTED_SCALAR.match(value))
+
+
 def frontmatter(*, text: str) -> dict[str, str]:
     """The `key: value` pairs of a leading `---` fenced YAML block.
 
     Deliberately not a YAML parser: SKILL.md frontmatter in this package is flat
-    scalars only, and depending on a YAML library for eight files would be a new
-    dependency guarding nothing.
+    scalars only. It still rejects the pi loader's fatal value-internal
+    unquoted `: ` shape so a conforming local gate means the skills can load.
     """
     lines = text.splitlines()
     if not lines or lines[0].strip() != "---":
         return {}
     fields: dict[str, str] = {}
-    for line in lines[1:]:
+    for line_number, line in enumerate(lines[1:], start=2):
         if line.strip() == "---":
             break
         key, separator, value = line.partition(":")
         if separator:
-            fields[key.strip()] = value.strip()
+            stripped_value = value.strip()
+            if ": " in stripped_value and not _is_quoted_scalar(value=stripped_value):
+                raise ValueError(f"line {line_number}: unquoted ': ' in frontmatter value")
+            fields[key.strip()] = stripped_value
     return fields
 
 
@@ -115,7 +123,10 @@ def skill_violations(*, operation: str, path: Path) -> list[str]:
         return [f"{path}: missing SKILL.md for operation '{operation}'"]
     text = path.read_text(encoding="utf-8")
     found: list[str] = []
-    fields = frontmatter(text=text)
+    try:
+        fields = frontmatter(text=text)
+    except ValueError as invalid:
+        return [f"{path}: invalid frontmatter ({invalid})"]
     expected_name = f"livespec-{operation}"
     if fields.get("name") != expected_name:
         found.append(f"{path}: frontmatter name is {fields.get('name')!r}, expected {expected_name!r}")

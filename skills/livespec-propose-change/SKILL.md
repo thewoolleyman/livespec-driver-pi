@@ -1,6 +1,6 @@
 ---
 name: livespec-propose-change
-description: File a proposed change against an existing livespec specification, landing it under <spec-root>/proposed_changes/<topic>.md. Use when the user wants to record a spec amendment that the next revise pass will accept or reject. Mutating: it writes a proposed-change file.
+description: File a proposed change against an existing livespec specification, landing it under <spec-root>/proposed_changes/<topic>.md. Use when the user wants to record a spec amendment that the next revise pass will accept or reject. This mutating operation writes a proposed-change file.
 allowed-tools: bash read write edit
 ---
 
