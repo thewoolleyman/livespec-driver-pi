@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/thewoolleyman/livespec-driver-pi/compare/v0.2.3...v0.3.0) (2026-08-17)
+
+
+### Features
+
+* declare the pi harness in .livespec.jsonc ([500faad](https://github.com/thewoolleyman/livespec-driver-pi/commit/500faad31cfb6167e2f02a4a7cd01ffa1c3a0e5a))
+
 ## [0.2.3](https://github.com/thewoolleyman/livespec-driver-pi/compare/v0.2.2...v0.2.3) (2026-08-17)
 
 
