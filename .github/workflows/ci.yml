@@ -1,12 +1,48 @@
-# Per-target matrix CI for livespec-driver-pi.
+# Batched static-check CI for livespec-driver-pi.
 #
 # Family conventions scaled to this repo's content. Every step delegates to
 # `just <target>` (direct tool invocations in `run:` lines are forbidden per
 # livespec/SPECIFICATION/non-functional-requirements.md §"Toolchain pins").
 #
-# The check matrix + the dedicated check jobs run in the SAME baked image
-# the Fabro sandbox uses — so "green in CI" and "green in sandbox" are the same
-# environment.
+# BATCHED SHAPE (work-item livespec-dev-tooling-yilyxr.9, porting
+# livespec-dev-tooling PR #1469 via livespec-driver-claude PR #516 and
+# livespec-driver-codex PR #484). The previous shape ran all 61 canonical +
+# repo-private check slugs as individual `strategy.matrix.target` legs, each
+# paying the same ~20s container + `mise trust` + `uv sync --all-groups` setup
+# tax for a scan that finishes in well under a minute. The setup tax dominated
+# the run. This shape keeps a matrix leg ONLY for the targets whose own runtime
+# dominates their setup — the four tool-backed gates plus the pytest-spawning
+# coverage targets and the two commit-range walkers — and collapses every
+# sub-minute scanner into two consolidated batch jobs that pay the setup once
+# and run their targets serially.
+#
+# Failure reporting in the batch jobs is COLLECTED, not fail-fast: each `just
+# <slug>` line records its slug into a `failed` accumulator and the job exits 1
+# at the end listing every failure. That preserves the diagnostic value of the
+# old `fail-fast: false` matrix — one run still tells you every check that is
+# red, not just the first.
+#
+# The batch jobs satisfy the shape invariants the meta-checks enforce:
+#   - check-tool-backed-check-completeness requires check-lint / check-format /
+#     check-types / check-coverage to be LITERAL `matrix.target` members, so
+#     those four stay in the check-python matrix and MUST NOT move to a batch.
+#   - check-ci-matrix-completeness assertion (a) counts a job's canonical
+#     coverage as its matrix targets UNION every `just <canonical-slug>` its
+#     `run:` lines invoke, so each batched target appears as its own literal
+#     `just <slug>` line rather than being looped over a shell array.
+#   - check-ci-matrix-completeness assertion (b) requires every GATING job
+#     (matrix-bearing or `just`-running) to appear in `ci-green.needs`, so both
+#     batch jobs are listed there.
+#
+# The three WORLD-GATE canonical checks (check-master-ci-green,
+# check-branch-protection-alignment, check-plan-epic-parity) are deliberately
+# absent: they verify master/world state under a maintainer admin token, are
+# excluded from the CI-mirror requirement by
+# canonical_checks.world_gate_check_slugs and livespec/.ai/ci-gate-discipline.md,
+# and enforce at pre-push.
+#
+# The check jobs all run in the SAME baked image the Fabro sandbox uses — so
+# "green in CI" and "green in sandbox" are the same environment.
 #
 # RUNNER ROUTING — FAILS CLOSED TO HOSTED CAPACITY.
 #
@@ -66,7 +102,19 @@ on:
     branches: [master]
 
 jobs:
-  check:
+  # Targets whose OWN runtime dominates the per-job setup tax, so a dedicated
+  # leg buys real wall-clock parallelism rather than paying setup twice for a
+  # sub-minute scan. Two distinct reasons a slug is here:
+  #
+  #   - check-lint / check-format / check-types / check-coverage are the four
+  #     fixed-policy TOOL-BACKED gates, which
+  #     check-tool-backed-check-completeness requires to be literal
+  #     `matrix.target` members of BOTH the `just check` targets array AND a CI
+  #     matrix. They are also genuinely slow (ruff over the tree, a full pyright
+  #     pass, a coverage-report gate).
+  #   - check-per-file-coverage spawns its own pytest suite, so its runtime is
+  #     variable and suite-sized.
+  check-python:
     name: ${{ matrix.target }}
     runs-on: ${{ fromJSON(vars.CI_RUNNER_LABELS || '["ubuntu-latest"]') }}
     container:
@@ -79,99 +127,23 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # This matrix RUNS every canonical `just check` aggregate slug so
-        # check-ci-matrix-completeness passes, EXCEPT two deliberate
-        # exclusions:
-        #   - check-master-ci-green / check-branch-protection-alignment /
-        #     check-plan-epic-parity — WORLD-GATE checks (they verify
-        #     master's CI, protection state, or the ledger, not the PR change;
-        #     they enforce at pre-push under the maintainer's admin-scoped
-        #     credentials and are excluded from the CI-mirror requirement per
-        #     canonical_checks.world_gate_check_slugs and
-        #     livespec/.ai/ci-gate-discipline.md).
-        #   - check-red-green-replay — runs in its own dedicated job below
-        #     (it needs full history to validate origin/master..HEAD).
-        # The matrix also runs this repo's private extras (the spec-governance
-        # default-block gate and the four fixed-policy tool-backed gates).
-        # The Checkout below uses fetch-depth: 0 because a few canonical legs
-        # (check-check-coverage-incremental, check-commit-pairs-source-and-test)
-        # diff origin/master..HEAD and need the base ref present.
         target:
-          - check-agents-ai-references-resolve
-          - check-aggregate-completeness
-          - check-all-declared
-          - check-assert-never-exhaustiveness
-          - check-canonical-recipe-fidelity
-          - check-check-coverage-incremental
-          - check-check-mutation
-          - check-check-tools
-          - check-ci-matrix-completeness
-          - check-claude-md-coverage
-          - check-comment-line-anchors
-          - check-commit-pairs-source-and-test
-          - check-file-lloc
-          - check-fleet-marketplace-relative-sources
-          - check-global-writes
-          - check-handoff-dispatch-routing
-          - check-heading-coverage
-          - check-hook-trees-not-io-exempt
-          - check-keyword-only-args
-          - check-local-memory-drift-audit
-          - check-main-guard
-          - check-match-keyword-only
-          - check-newtype-domain-primitives
-          - check-no-direct-destructive-cli
-          - check-no-direct-tool-invocation
-          - check-no-except-outside-io
-          - check-no-fmt-directives
-          - check-no-inheritance
-          - check-no-lloc-soft-warnings
-          - check-no-raise-outside-io
-          - check-no-shadow-ledger-body-identical
-          - check-no-shadow-ledger-body-typechecks
-          - check-no-todo-registry
-          - check-no-write-direct
-          - check-partition-completeness
-          - check-pbt-coverage-pure-modules
-          - check-per-file-coverage
-          - check-plan-anchor-declared
-          - check-plan-no-tombstone
-          - check-plugin-resolution
-          - check-primary-checkout-commit-refuse-hook-installed
-          - check-private-calls
-          - check-public-api-result-typed
-          - check-required-role-keys-declared
-          - check-rop-pipeline-shape
-          - check-self-hosted-routing
-          - check-shell-quality
-          - check-skill-invocation-paths
-          - check-source-trees-scoped-to-consumer
-          - check-supervisor-discipline
-          - check-tests-mirror-pairing
-          - check-tests-no-subprocess-spawn
-          - check-tool-backed-check-completeness
-          - check-vendor-manifest
-          - check-wrapper-shape
-          # Repo-private extras (NOT canonical) — also exercised in CI.
-          # check-lint / check-format / check-types / check-coverage are the
-          # four fixed-policy tool-backed gates that
-          # check-tool-backed-check-completeness requires as literal members
-          # of BOTH the `just check` targets array AND a CI matrix.
-          - check-spec-governance-default-block
-          - check-pi-package-structure
+          # The four tool-backed gates MUST stay literal members here
+          # (check-tool-backed-check-completeness's both-surfaces invariant).
           - check-lint
           - check-format
           - check-types
           - check-coverage
+          # pytest-spawning, suite-sized runtime.
+          - check-per-file-coverage
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          # Full history: check-check-coverage-incremental and
-          # check-commit-pairs-source-and-test enumerate origin/master..HEAD
-          # and need origin/master plus the merge base in the clone. A
-          # shallow (fetch-depth: 1) checkout would make the base
-          # unresolvable and fail those legs.
+          # Full history: keeping one checkout shape across every container job
+          # below avoids a per-job "does this leg need history" question, and
+          # the metadata jobs genuinely need origin/master reachable. Cheap for
+          # this repo.
           fetch-depth: 0
 
       # GitHub-hosted routing keeps the baked `container:` image, so the
@@ -223,42 +195,7 @@ jobs:
       - name: Install Python dev deps via uv
         run: uv sync --all-groups
 
-      # The check-primary-checkout-commit-refuse-hook-installed leg verifies
-      # the canonical livespec commit-refuse hook is installed at
-      # .git/hooks/{pre-commit,pre-push,commit-msg} and byte-identical to the
-      # package's canonical body. actions/checkout clones a fresh tree with no
-      # bootstrap run, so this leg installs the hook first by REUSING the
-      # shared installer (via `just install-commit-refuse-hooks`, which runs
-      # `uv run python -m livespec_dev_tooling.install_commit_refuse_hooks` —
-      # hence AFTER uv sync). Scoped to this leg alone.
-      - name: Install canonical commit-refuse hook (satisfy invariant)
-        if: matrix.target == 'check-primary-checkout-commit-refuse-hook-installed'
-        run: just install-commit-refuse-hooks
-
-      # Same rationale as the hook step above: a fresh `actions/checkout` has no
-      # materialized worktree pack (the pack is gitignored-and-installed, never
-      # tracked), so the verifier's pack arm has nothing to compare against on an
-      # untouched runner.
-      #
-      # check-shell-quality IS ALSO LISTED, and without it that check would pass
-      # VACUOUSLY here. `dev-tooling/*.just` is gitignored and this justfile
-      # imports it OPTIONALLY (`import?`), so on an untouched runner the
-      # `worktree-*` recipes DO NOT EXIST and the scan has no subject — green for
-      # work it never did.
-      - name: Install canonical worktree pack (satisfy invariant)
-        if: >-
-          matrix.target == 'check-primary-checkout-commit-refuse-hook-installed'
-          || matrix.target == 'check-shell-quality'
-        run: just install-worktree-pack
-
       - name: just ${{ matrix.target }}
-        env:
-          # Arm the CI-matrix drift guard: with this repo's matrix + ci-green
-          # complete, flip check-ci-matrix-completeness from warn (exit 0) to
-          # FAIL (exit 4), so any future canonical slug wired into `just check`
-          # but dropped from CI reddens this leg instead of silently warning.
-          # Harmless for the other legs — they do not read this var.
-          LIVESPEC_FAIL_IF_CI_MATRIX_GAPS_EXIST: "true"
         run: |
           # pyright (check-types) shells out to `npm`; under the container-hooks
           # HOME the mise npm shim busy-loops (no node registered for that HOME).
@@ -270,20 +207,16 @@ jobs:
           [ -n "$node_bin" ] && export PATH="$node_bin:$PATH"
           just ${{ matrix.target }}
 
-  # Red→Green→Replay commit-range gate (epic livespec-gcp2). A
-  # lefthook-only gate is locally bypassable, and this fleet is
-  # CI-authoritative, so the ritual MUST also run here. This is a
-  # SEPARATE job from the `check` matrix because it has a distinct
-  # checkout requirement: `check-red-green-replay` (no-arg) validates
-  # the COMMIT RANGE origin/master..HEAD — every non-merge commit
-  # touching product impl .py must carry EITHER the TDD-Red-*/TDD-Green-*
-  # pair shape OR the TDD-Suite-Green-* shape, regardless of subject
-  # prefix. It runs UNCONDITIONALLY: on a zero-.py PR the range carries
-  # no product .py and trivially passes; on a master push the range is
-  # empty. It NEVER silently passes — an unresolvable base fails the job
-  # actionably.
-  red-green-replay:
-    name: check-red-green-replay
+  # Batched cheap .py-scanning checks: one container setup for 24 sub-minute
+  # AST/structure scanners that used to be 24 matrix legs. Failures are
+  # COLLECTED so one run still reports every red target (the old matrix's
+  # `fail-fast: false` property). Each target is a literal `just <slug>` line
+  # so check-ci-matrix-completeness assertion (a) credits this job with them.
+  #
+  # check-pi-package-structure is this repo's private .py-shaped extra (NOT
+  # canonical); it batches here alongside the canonical scanners.
+  check-python-batch:
+    name: check-python-batch
     runs-on: ${{ fromJSON(vars.CI_RUNNER_LABELS || '["ubuntu-latest"]') }}
     container:
       image: ghcr.io/thewoolleyman/livespec-fabro-sandbox:python-v1.28.6
@@ -296,17 +229,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          # Full history: the range validation enumerates
-          # origin/master..HEAD and needs origin/master plus the merge
-          # base present in the clone. A shallow (fetch-depth: 1)
-          # checkout would make the base unresolvable and fail the
-          # check actionably — never a silent pass.
           fetch-depth: 0
 
+      # See check-python for the full root-vs-checkout-uid rationale.
       - name: Trust workspace for git (hosted container root-vs-checkout uid)
         run: git config --global --add safe.directory '*'
 
-      # See the check job for the full self-hosted shallow-fetch rationale.
+      # See check-python for the full self-hosted shallow-fetch rationale.
       - name: Ensure full history is available (self-hosted reused _work dir)
         if: ${{ !contains(vars.CI_RUNNER_LABELS || '["ubuntu-latest"]', 'ubuntu') }}
         run: |
@@ -323,15 +252,228 @@ jobs:
       - name: Install Python dev deps via uv
         run: uv sync --all-groups
 
-      - name: just check-red-green-replay
-        run: just check-red-green-replay
+      - name: Run the batched python checks
+        run: |
+          failed=""
+          just check-all-declared || failed="$failed check-all-declared"
+          just check-assert-never-exhaustiveness || failed="$failed check-assert-never-exhaustiveness"
+          just check-check-mutation || failed="$failed check-check-mutation"
+          just check-file-lloc || failed="$failed check-file-lloc"
+          just check-global-writes || failed="$failed check-global-writes"
+          just check-keyword-only-args || failed="$failed check-keyword-only-args"
+          just check-main-guard || failed="$failed check-main-guard"
+          just check-match-keyword-only || failed="$failed check-match-keyword-only"
+          just check-newtype-domain-primitives || failed="$failed check-newtype-domain-primitives"
+          just check-no-except-outside-io || failed="$failed check-no-except-outside-io"
+          just check-no-fmt-directives || failed="$failed check-no-fmt-directives"
+          just check-no-inheritance || failed="$failed check-no-inheritance"
+          just check-no-lloc-soft-warnings || failed="$failed check-no-lloc-soft-warnings"
+          just check-no-raise-outside-io || failed="$failed check-no-raise-outside-io"
+          just check-no-write-direct || failed="$failed check-no-write-direct"
+          just check-pbt-coverage-pure-modules || failed="$failed check-pbt-coverage-pure-modules"
+          just check-pi-package-structure || failed="$failed check-pi-package-structure"
+          just check-private-calls || failed="$failed check-private-calls"
+          just check-public-api-result-typed || failed="$failed check-public-api-result-typed"
+          just check-rop-pipeline-shape || failed="$failed check-rop-pipeline-shape"
+          just check-supervisor-discipline || failed="$failed check-supervisor-discipline"
+          just check-tests-mirror-pairing || failed="$failed check-tests-mirror-pairing"
+          just check-tests-no-subprocess-spawn || failed="$failed check-tests-no-subprocess-spawn"
+          just check-wrapper-shape || failed="$failed check-wrapper-shape"
+          if [ -n "$failed" ]; then
+            echo "Failed targets:$failed"
+            exit 1
+          fi
+
+  # Metadata targets that keep their own leg: both enumerate a COMMIT RANGE
+  # (origin/master..HEAD) rather than scanning the working tree, so their
+  # runtime is history-sized and variable, and check-red-green-replay
+  # additionally re-runs pytest per replayed commit.
+  #
+  # check-red-green-replay (epic livespec-gcp2) validates that every non-merge
+  # commit in origin/master..HEAD touching product impl .py carries EITHER the
+  # TDD-Red-*/TDD-Green-* pair shape OR the TDD-Suite-Green-* shape, regardless
+  # of subject prefix. A lefthook-only gate is locally bypassable and this fleet
+  # is CI-authoritative, so the ritual MUST also run here. It runs
+  # UNCONDITIONALLY: on a zero-.py PR the range carries no product .py and
+  # trivially passes; on a master push the range is empty. It NEVER silently
+  # passes — an unresolvable base fails the job actionably.
+  check-metadata:
+    name: ${{ matrix.target }}
+    runs-on: ${{ fromJSON(vars.CI_RUNNER_LABELS || '["ubuntu-latest"]') }}
+    container:
+      image: ghcr.io/thewoolleyman/livespec-fabro-sandbox:python-v1.28.6
+    env:
+      MISE_DATA_DIR: /root/.local/share/mise
+      MISE_NOT_FOUND_AUTO_INSTALL: "0"
+      GITHUB_TOKEN: ${{ github.token }}
+      GH_TOKEN: ${{ github.token }}
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - check-red-green-replay
+          - check-check-coverage-incremental
+    steps:
+      - name: Checkout (full history for commit-range validation)
+        uses: actions/checkout@v4
+        with:
+          # Full history: the range validation enumerates origin/master..HEAD
+          # and needs origin/master plus the merge base present in the clone. A
+          # shallow (fetch-depth: 1) checkout would make the base unresolvable
+          # and fail the check actionably — never a silent pass.
+          fetch-depth: 0
+
+      # See check-python for the full root-vs-checkout-uid rationale.
+      - name: Trust workspace for git (hosted container root-vs-checkout uid)
+        run: git config --global --add safe.directory '*'
+
+      # See check-python for the full self-hosted shallow-fetch rationale. This
+      # job is the one that most needs it: both targets resolve origin/master.
+      - name: Ensure full history is available (self-hosted reused _work dir)
+        if: ${{ !contains(vars.CI_RUNNER_LABELS || '["ubuntu-latest"]', 'ubuntu') }}
+        run: |
+          if [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
+            git fetch --unshallow origin
+          fi
+          git fetch origin master:refs/remotes/origin/master
+
+      - name: mise trust + install (baked tools — install is a near-no-op)
+        run: |
+          mise trust
+          mise install
+
+      - name: Install Python dev deps via uv
+        run: uv sync --all-groups
+
+      - name: just ${{ matrix.target }}
+        run: just ${{ matrix.target }}
+
+  # Batched cheap repo-metadata checks: one container setup for 31 sub-minute
+  # targets that used to be 31 matrix legs. Failures are COLLECTED; every
+  # target is a literal `just <slug>` line (assertion (a)) and the job is
+  # gating (assertion (b): listed in ci-green.needs).
+  #
+  # check-spec-governance-default-block is this repo's private spec-governance
+  # extra (NOT canonical); it batches here with the other metadata scanners.
+  #
+  # The commit-refuse hook and the worktree pack install UNCONDITIONALLY here,
+  # because the two checks that need them
+  # (check-primary-checkout-commit-refuse-hook-installed, check-shell-quality)
+  # both live in this batch. In the old per-leg matrix these installs were
+  # gated on `matrix.target ==` conditions; a batch job has no such selector,
+  # and installing both for every run of this one job is cheap.
+  check-metadata-batch:
+    name: check-metadata-batch
+    runs-on: ${{ fromJSON(vars.CI_RUNNER_LABELS || '["ubuntu-latest"]') }}
+    container:
+      image: ghcr.io/thewoolleyman/livespec-fabro-sandbox:python-v1.28.6
+    env:
+      MISE_DATA_DIR: /root/.local/share/mise
+      MISE_NOT_FOUND_AUTO_INSTALL: "0"
+      GITHUB_TOKEN: ${{ github.token }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Full history: check-commit-pairs-source-and-test diffs against
+          # origin/master, and several plan/ledger checks read history.
+          fetch-depth: 0
+
+      # See check-python for the full root-vs-checkout-uid rationale.
+      - name: Trust workspace for git (hosted container root-vs-checkout uid)
+        run: git config --global --add safe.directory '*'
+
+      # See check-python for the full self-hosted shallow-fetch rationale.
+      - name: Ensure full history is available (self-hosted reused _work dir)
+        if: ${{ !contains(vars.CI_RUNNER_LABELS || '["ubuntu-latest"]', 'ubuntu') }}
+        run: |
+          if [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
+            git fetch --unshallow origin
+          fi
+          git fetch origin master:refs/remotes/origin/master
+
+      - name: mise trust + install (baked tools — install is a near-no-op)
+        run: |
+          mise trust
+          mise install
+
+      - name: Install Python dev deps via uv
+        run: uv sync --all-groups
+
+      # CI's actions/checkout does NOT install the git hooks, so
+      # check-primary-checkout-commit-refuse-hook-installed would fail.
+      # Install them here — AFTER uv sync, so the installer module is
+      # importable — REUSING the same from-package installer bootstrap uses.
+      # The verifier only READS the hook file; the hook never fires in CI.
+      - name: Install canonical commit-refuse hook (satisfy invariant)
+        run: just install-commit-refuse-hooks
+
+      # Same rationale: a fresh `actions/checkout` has no materialized worktree
+      # pack (the pack is gitignored-and-installed, never tracked), so the
+      # verifier's pack arm has nothing to compare against on an untouched
+      # runner. Installs from the SAME package source the check reads.
+      #
+      # check-shell-quality ALSO needs this, and without it that check passed
+      # VACUOUSLY. `dev-tooling/*.just` is gitignored and this justfile imports
+      # it OPTIONALLY (`import?`), so on an untouched runner the `worktree-*`
+      # recipes DO NOT EXIST and the scan had no subject — green for work it
+      # never did.
+      - name: Install canonical worktree pack (satisfy invariant)
+        run: just install-worktree-pack
+
+      - name: Run the batched metadata checks
+        env:
+          # Arm the CI-matrix drift guard: with this repo's jobs + ci-green
+          # complete, flip check-ci-matrix-completeness from warn (exit 0) to
+          # FAIL (exit 4), so any future canonical slug wired into `just check`
+          # but dropped from CI reddens this job instead of silently warning.
+          # Harmless for the other batched targets — they do not read this var.
+          LIVESPEC_FAIL_IF_CI_MATRIX_GAPS_EXIST: "true"
+        run: |
+          failed=""
+          just check-agents-ai-references-resolve || failed="$failed check-agents-ai-references-resolve"
+          just check-aggregate-completeness || failed="$failed check-aggregate-completeness"
+          just check-canonical-recipe-fidelity || failed="$failed check-canonical-recipe-fidelity"
+          just check-check-tools || failed="$failed check-check-tools"
+          just check-ci-matrix-completeness || failed="$failed check-ci-matrix-completeness"
+          just check-claude-md-coverage || failed="$failed check-claude-md-coverage"
+          just check-comment-line-anchors || failed="$failed check-comment-line-anchors"
+          just check-commit-pairs-source-and-test || failed="$failed check-commit-pairs-source-and-test"
+          just check-fleet-marketplace-relative-sources || failed="$failed check-fleet-marketplace-relative-sources"
+          just check-handoff-dispatch-routing || failed="$failed check-handoff-dispatch-routing"
+          just check-heading-coverage || failed="$failed check-heading-coverage"
+          just check-hook-trees-not-io-exempt || failed="$failed check-hook-trees-not-io-exempt"
+          just check-local-memory-drift-audit || failed="$failed check-local-memory-drift-audit"
+          just check-no-direct-destructive-cli || failed="$failed check-no-direct-destructive-cli"
+          just check-no-direct-tool-invocation || failed="$failed check-no-direct-tool-invocation"
+          just check-no-shadow-ledger-body-identical || failed="$failed check-no-shadow-ledger-body-identical"
+          just check-no-shadow-ledger-body-typechecks || failed="$failed check-no-shadow-ledger-body-typechecks"
+          just check-no-todo-registry || failed="$failed check-no-todo-registry"
+          just check-partition-completeness || failed="$failed check-partition-completeness"
+          just check-plan-anchor-declared || failed="$failed check-plan-anchor-declared"
+          just check-plan-no-tombstone || failed="$failed check-plan-no-tombstone"
+          just check-plugin-resolution || failed="$failed check-plugin-resolution"
+          just check-primary-checkout-commit-refuse-hook-installed || failed="$failed check-primary-checkout-commit-refuse-hook-installed"
+          just check-required-role-keys-declared || failed="$failed check-required-role-keys-declared"
+          just check-self-hosted-routing || failed="$failed check-self-hosted-routing"
+          just check-shell-quality || failed="$failed check-shell-quality"
+          just check-skill-invocation-paths || failed="$failed check-skill-invocation-paths"
+          just check-source-trees-scoped-to-consumer || failed="$failed check-source-trees-scoped-to-consumer"
+          just check-spec-governance-default-block || failed="$failed check-spec-governance-default-block"
+          just check-tool-backed-check-completeness || failed="$failed check-tool-backed-check-completeness"
+          just check-vendor-manifest || failed="$failed check-vendor-manifest"
+          if [ -n "$failed" ]; then
+            echo "Failed targets:$failed"
+            exit 1
+          fi
 
   # livespec core's STATIC doctor phase over this repo's own SPECIFICATION/
   # tree. The checker (doctor_static.py — self-contained, bare python3) ships
   # with CORE, not with this Driver, so this job checks core out at the release
   # tag THIS repo pins (.livespec.jsonc compat.pinned) and points the recipe at
-  # it via LIVESPEC_CORE_PLUGIN_ROOT. It gets its OWN job rather than a matrix
-  # leg because it needs that second checkout, which no other target does.
+  # it via LIVESPEC_CORE_PLUGIN_ROOT. It gets its OWN job rather than a batch
+  # line because it needs that second checkout, which no other target does.
   check-doctor-static:
     name: check-doctor-static
     runs-on: ${{ fromJSON(vars.CI_RUNNER_LABELS || '["ubuntu-latest"]') }}
@@ -346,8 +488,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # The '*' also covers the .livespec-core checkout below. See the check
-      # job for the full hosted container root-vs-checkout uid rationale.
+      # The '*' also covers the .livespec-core checkout below. See check-python
+      # for the full hosted container root-vs-checkout uid rationale.
       - name: Trust workspace for git (hosted container root-vs-checkout uid)
         run: git config --global --add safe.directory '*'
 
@@ -395,7 +537,7 @@ jobs:
 
   export-telemetry:
     name: export-telemetry
-    needs: [check, red-green-replay]
+    needs: [check-python, check-python-batch, check-metadata, check-metadata-batch]
     if: ${{ !cancelled() && github.event_name == 'push' }}
     runs-on: ubuntu-latest
     permissions:
@@ -414,14 +556,19 @@ jobs:
 
   # Single all-green gate job. This is the SOLE branch-protection required
   # context: it `needs:` every check-bearing job, so requiring only `ci-green`
-  # blocks merges on the entire matrix + dedicated check jobs via one stable
-  # context-name that never churns as checks are added. Pure GitHub-expression
-  # gate (no external action, no direct tool invocation): `always()` runs it
-  # even when a dependency failed, and the step fails the job iff any
-  # dependency failed or was cancelled.
+  # blocks merges on the whole set via one stable context-name that never
+  # churns as checks are added or rebatched. Pure GitHub-expression gate (no
+  # external action, no direct tool invocation): `always()` runs it even when a
+  # dependency failed, and the step fails the job iff any dependency failed or
+  # was cancelled.
   ci-green:
     name: ci-green
-    needs: [check, check-doctor-static, red-green-replay]
+    needs:
+      - check-python
+      - check-python-batch
+      - check-metadata
+      - check-metadata-batch
+      - check-doctor-static
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
