@@ -7,11 +7,12 @@
 # publishes a GitHub Release.
 #
 # Version source of truth: the git tag plus CHANGELOG.md -- NOT pyproject.toml.
-# The sibling Drivers additionally stamp their plugin manifest's $.version
-# through the release-please-config.json `extra-files` JSON updater. This repo
-# ships no plugin manifest yet, so it declares no `extra-files`; the pass that
-# lands the pi plugin manifest MUST add the matching `extra-files` entry, or
-# the manifest version silently stops tracking releases.
+# The pi package manifest's $.version is ALSO stamped, through the
+# release-please-config.json `extra-files` JSON updater -- the same mechanism
+# the sibling Drivers use for their plugin manifests. That entry is in place
+# and working (package.json tracked 0.3.0 -> 0.5.0), so do not add a second
+# one: a duplicate updater for the same path is how the manifest version
+# starts disagreeing with the tag.
 #
 # Auth: release-please MUST mint the livespec GitHub App installation token
 # (secrets APP_ID + APP_PRIVATE_KEY), NEVER the default GITHUB_TOKEN -- a

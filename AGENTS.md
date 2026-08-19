@@ -73,122 +73,156 @@ bindings here only for pi-runtime mechanics.
 | `extensions/livespec-footgun-guard.ts` | The ONE sanctioned first-party pi extension — the `tool_call`-blocking footgun guard. |
 | `package.json` | The pi package manifest (`pi.skills`, `pi.extensions`, the `pi-package` keyword). Its `$.version` is release-please-managed via `extra-files`. |
 | `SPECIFICATION/` | This repo's own live livespec spec (dogfooded), governing the Driver-owned seam only: the pi package manifest, the eight-binding set, the core-root resolution chain, config-named CLI dispatch, and the footgun-guard extension. It defers to livespec core by citation and never restates the upstream contract. |
-| `tests/dev-tooling/` | pytest mirror of `dev-tooling/`, holding the 100%-coverage suite for both repo-local structural checks. |
+| `tests/dev-tooling/` | pytest mirror of `dev-tooling/`, holding the 100%-coverage suite for the repo-local structural checks. |
+| `tests/extensions/` | The behavioral suite for the footgun-guard extension, run by `check-extension-quality` under `node --test`. TypeScript, not pytest — it drives the guard's exported `decide()` with no pi runtime and nothing mocked. |
+| `tests/test_shell_quality_gate.py` | The shell-quality positive control: proves `check-shell-quality` can go RED, so a green run means something. |
 | `tests/heading-coverage.json` | The heading-coverage map. Every `## ` H2 in the spec tree needs an entry; co-edit it in the SAME revise payload that changes an H2 set. |
 | `.livespec.jsonc` | Project-local livespec config: template, spec_root, active orchestrator plugin, the Driver `compat` pin against core, the declared harnesses, and the per-repo beads tenant connection block. |
-| `dev-tooling/` | The family-standard enforcement scaffolds: the `just check` aggregate runner, the pre-push gate, the staged-ruff autofixer, the factory-branch workflow guard, and the two repo-local structural checks (the spec-governance default-block gate and `check-pi-package-structure`). The worktree-discipline pack and the commit-refuse hooks are NOT tracked here — `just bootstrap` installs both from the shared `livespec-dev-tooling` package. |
+| `dev-tooling/` | The family-standard enforcement scaffolds: the `just check` aggregate runner, the pre-push gate, the staged-ruff autofixer, the factory-branch workflow guard, and the repo-local gates (`check-spec-governance-default-block`, `check-pi-package-structure`, `check-pi-drive-output`, `check-extension-quality`, `check-doctor-static`). The worktree-discipline pack and the commit-refuse hooks are NOT tracked here — `just bootstrap` installs both from the shared `livespec-dev-tooling` package. |
 | `justfile`, `lefthook.yml`, `check-targets.txt`, `pyproject.toml` | Family-standard task runner, git-hook config, aggregate target list, and dev-tooling pins. |
 | `.github/` | Per-target matrix CI plus the seven fleet shim / release-automation workflows, and the closed-loop Honeycomb telemetry export script. |
 | `.claude/` | Project-scope Claude plugin enablement (`settings.json`) and the `CLAUDE.md` → `AGENTS.md` symlink. |
 | `.ai/` | Progressive-load agent guidance: repo-specific operational notes that are too situational for this file and must not live in harness-local memory. Referenced from §"Progressive guidance" below, which is what makes `check-agents-ai-references-resolve` non-vacuous here. |
-| `.mise.toml`, `.python-version`, `.gitignore` | Family-standard toolchain configuration. |
+| `tsconfig.json`, `package-lock.json` | Typecheck-only TS configuration (no emit; `erasableSyntaxOnly` keeps the guard loadable under Node's type stripping) and the npm lockfile `check-extension-quality` reconstructs `node_modules/` from. |
+| `.mise.toml`, `.python-version`, `.gitignore` | Family-standard toolchain configuration. `.mise.toml` pins `node` too, for the TypeScript extension's gate. |
 
-## Bootstrap status
+## Post-bootstrap status
 
-This repo is mid-bootstrap (plan `bootstrap-pi-driver`, epic
-`livespec-g5h5ff` in the livespec core ledger). Read this section before
-assuming a piece is missing by accident.
+The bootstrap is COMPLETE. Plan `bootstrap-pi-driver` (epic
+`livespec-g5h5ff`, livespec core ledger) closed 2026-08-18 with an
+independent completeness review. The successor thread is
+`plan/bootstrap-pi-driver-wrapup/`, epic `livespec-driver-pi-jvvhxi` in
+THIS repo's own tenant, which carries the post-bootstrap audit's findings
+and the upstream-prevention work.
 
-**Present:**
+Read this section before assuming a piece is missing by accident — and
+read the ledger before assuming this section is current. Status is
+ledger-held; what follows is orientation, not the source of truth:
+
+```bash
+/usr/local/bin/with-livespec-env.sh -- bd -C /data/projects/livespec-driver-pi list --status all
+```
+
+**Present and working:**
 
 - The Python toolchain (mise pins, uv-managed interpreter + dev group,
   ruff/pyright/pytest/coverage policy, the `[tool.livespec_dev_tooling]`
-  layout role keys).
+  layout role keys) and, since the extension-quality pass, a `node` pin
+  with `package.json` / `package-lock.json` as its npm-side analogue.
 - The enforcement wiring: `justfile` (sole entry point), `lefthook.yml`,
   `check-targets.txt` carrying the full canonical block plus the private
   extras, and the `dev-tooling/` scripts.
-- All eight fleet workflows and release automation (matrix CI, the
-  release-dispatch producer shim, the bump-pin and pin-freshness receiving
-  shims, release-park, release-please, fast-forward-release-branch,
-  auto-enable-merge) plus the CI telemetry export.
-- `.livespec.jsonc` and the project-scope `.claude/` configuration.
+- All eight fleet workflows and release automation, and they are not
+  merely present — they RUN. The fleet GitHub App installation grant
+  landed 2026-08-16, and `release-please`, `auto-enable-merge`,
+  `fast-forward-release-branch`, and the release-dispatch fan-out have
+  all succeeded since. The `release` branch exists, so the `@release`
+  install channel is live; v0.3.0 through v0.5.0 are cut, each carrying
+  the `package.json` `$.version` bump via `release-please-config.json`'s
+  `extra-files` updater.
+- **Fleet-manifest registration and the GitHub topic**, the two
+  register-LAST obligations: `.livespec-fleet-manifest.jsonc:57` in
+  livespec core carries `{ "repo": "livespec-driver-pi", "class":
+  "driver-plugin" }` (commit `cb1a8409`), and the `livespec-sibling`
+  topic is set.
+- **The pi harness declaration.** `.livespec.jsonc` declares `"pi": {
+  "status": "supported" }`; the shared `check-plugin-resolution`
+  Verifier's `_KNOWN_HARNESSES` set includes `pi` as of
+  livespec-dev-tooling v1.28.x, so the declaration is EXERCISED rather
+  than failing closed. The upstream items that blocked it
+  (`livespec-dev-tooling-a924`, `-phb3`) are closed.
+- `.livespec.jsonc`, the project-scope `.claude/` configuration, and the
+  citation allowlist (`external_references` plus a `cross_repo_targets`
+  entry for `livespec`). Doctor-static re-reads the real upstream file
+  when that clone is resolvable, so a renamed upstream section fails here
+  instead of rotting silently. Adding a new upstream citation to the spec
+  means adding it to that list in the same change.
 - **The beads tenant.** `.beads/config.yaml` (committed; TCP server-mode
   connection to the `livespec-driver-pi` Dolt tenant) plus the gitignored,
-  regenerable `metadata.json`, landed in `183321d`.
+  regenerable `metadata.json`, landed in `183321d`. Operational hazards:
+  `.ai/beads-tenant.md`.
 - **The pi package surface.** The eight `livespec-<operation>` SKILL.md
   bindings, the shared `lib/resolve-core-root.sh` resolver, the sanctioned
-  TypeScript footgun-guard extension, and the `package.json` pi manifest —
-  with `release-please-config.json` carrying the `extra-files` JSON updater
-  for the manifest's `$.version`, so it tracks releases.
+  TypeScript footgun-guard extension, and the `package.json` pi manifest.
 - **`check-pi-package-structure`**, the repo-local structural gate over that
-  surface, wired into the justfile, `check-targets.txt`, and the CI matrix. It
-  exists because the shared `check-skill-invocation-paths` Verifier is scoped
-  to `.claude-plugin/skills/` and therefore VACUOUSLY SKIPS in a pi package —
-  it returns 0 having inspected nothing. There is NO shared
-  `check-plugin-structure` module in `livespec-dev-tooling` (the earlier note
-  here naming one was mistaken); this repo-local check is the analogue.
-- **The `tests/` tree**, mirroring `dev-tooling/`, at 100% coverage — which is
-  what makes `check-coverage` / `check-per-file-coverage` meaningful rather
-  than green over an empty measurement.
-- **The dogfooded `SPECIFICATION/` tree**, seeded at `v001` through livespec
-  core's own seed operation, governing the Driver-owned seam only. Its
-  companion wiring landed in the same pass: `dev-tooling/check-doctor-static.sh`,
-  the `check-doctor-static` justfile recipe and `check-targets.txt` entry, the
-  dedicated CI job (which checks livespec core out at the release tag
-  `.livespec.jsonc` pins, since the checker ships with CORE), and — the part a
-  forgotten pass silently loses — that job's entry in `ci-green`'s `needs:`
-  list.
-- **`tests/heading-coverage.json`**, one entry per spec `## ` H2. Every entry is
-  a `TODO` today; the `scenarios.md` reasons name the INTEGRATION tier
+  surface. It exists because the shared `check-skill-invocation-paths`
+  Verifier is scoped to `.claude-plugin/skills/` and therefore VACUOUSLY
+  SKIPS in a pi package — it returns 0 having inspected nothing. There is NO
+  shared `check-plugin-structure` module in `livespec-dev-tooling`; this
+  repo-local check is the analogue.
+- **`check-extension-quality`**, the gate over the TypeScript footgun
+  guard: `tsc --noEmit` (with `erasableSyntaxOnly`, so the guard is proven
+  loadable under Node's type stripping) plus a behavioral suite driving
+  the guard's exported `decide()`. It exists because
+  `check-pi-package-structure`'s assertions are over the file's TEXT and
+  survive both a guard that stopped compiling and a predicate that
+  inverted — both mutations were confirmed to pass it and to be killed by
+  the suite. The sibling Drivers get this coverage free from the Python
+  gates; a TypeScript guard rides none of them.
+- **The `tests/` tree** at 100% coverage — which is what makes
+  `check-coverage` / `check-per-file-coverage` meaningful rather than green
+  over an empty measurement — including the shell-quality positive control
+  that proves that gate can go red.
+- **The dogfooded `SPECIFICATION/` tree**, seeded at `v001`, with
+  `dev-tooling/check-doctor-static.sh`, its justfile recipe and
+  `check-targets.txt` entry, and its dedicated CI job (which checks livespec
+  core out at the release tag `.livespec.jsonc` pins, since the checker ships
+  with CORE) — including that job's entry in `ci-green`'s `needs:` list,
+  which is the part a forgotten pass silently loses.
+- **`tests/heading-coverage.json`**, one entry per spec `## ` H2. Every entry
+  is a `TODO` today; the `scenarios.md` reasons name the INTEGRATION tier
   explicitly, which `check-heading-coverage` requires for a scenario heading —
   a reason that merely cites the implementing work-item fails the check.
-- **The citation allowlist.** `.livespec.jsonc` carries `external_references`
-  for the upstream sections this spec cites, plus a `cross_repo_targets`
-  entry for `livespec`. Doctor-static re-reads the real upstream file when that
-  clone is resolvable, so a renamed upstream section fails here instead of
-  rotting silently. Adding a new upstream citation to the spec means adding it
-  to that list in the same change.
+- **The `.ai/` guidance tree** (`beads-tenant.md`, `pi-runtime.md`),
+  referenced from §"Progressive guidance" below. Before it landed,
+  `check-agents-ai-references-resolve` was armed and structurally
+  incapable of firing: it is a dangling-REFERENCE check, and a repo that
+  references zero `.ai/` files passes by construction.
 - **Branch protection**, verified live: `master` requires exactly one status
   context, `ci-green`, with admin enforcement and linear history on and
   strict/up-to-date OFF. That single context is why adding a CI job without
   adding it to `ci-green`'s `needs:` list stops gating silently.
 
-**Pending, in roughly this order:**
+**Open, each with a named carrier under epic `livespec-driver-pi-jvvhxi`:**
 
-1. **The fleet GitHub App installation grant** (MAINTAINER-ONLY). The three
-   repo secrets the sibling Drivers carry — `APP_ID`, `APP_PRIVATE_KEY`
-   (normalized single-line PEM), `HONEYCOMB_GITHUB_CI_INGEST_KEY_LIVESPEC` —
-   ARE all set (verified 2026-08-15 via `gh secret list`; an earlier revision
-   of this section claimed they were missing, which was true before
-   2026-08-15T14:43Z and is stale now). The remaining gap is that the fleet
-   GitHub App installation `131208965` does not include this repository, so
-   `Mint App installation token` 404s and `release-please.yml`,
-   `auto-enable-merge.yml`, and `fast-forward-release-branch.yml` fail on
-   every trigger (verified against the 2026-08-15T15:37Z run). None of them
-   gate `ci-green`, so this does not block merges — it silently disables the
-   release train and the auto-merge path. Once the grant lands: first release
-   cut (multiple `feat:` commits pending) → `release` branch → the `@release`
-   install channel exists.
+- `CI_RUNNER_LABELS` is UNSET, so every matrix job falls through
+  `fromJSON(vars.CI_RUNNER_LABELS || '["ubuntu-latest"]')` onto
+  GitHub-hosted runners — this repo is silently opted out of the fleet ARC
+  k3s pool, and green CI makes that invisible. Carrier
+  `livespec-driver-pi-pbmnua` (maintainer-only: it needs a scale set and a
+  repo-variable write). See §"CI runner routing" below before touching it.
+- The small parity items — the `file_lloc_hard_gate` decision and the
+  `.claude/settings.json` dev-time-hooks decision: carrier
+  `livespec-driver-pi-zazr4d`.
+- The adopter `.pi/settings.json` audit (openbrain, resume, homelab,
+  dolt-server): carrier `livespec-driver-pi-no6in2`.
+- The prompt-template layer (`/livespec-<op>` bare commands) adopt-or-
+  re-defer decision: carrier `livespec-driver-pi-jyuvlv`.
+- Upstream prevention, so the next hand-built Driver does not repeat these
+  omissions: a maintained per-class obligation list into livespec core
+  (`livespec-driver-pi-65yari`), `external_references` coverage in the
+  copier template (`livespec-driver-pi-ybsp4p`), and the decision on
+  whether `check-agents-ai-references-resolve` must detect `.ai/` ABSENCE
+  (`livespec-driver-pi-nwsjym`). These land in the livespec and
+  livespec-dev-tooling tenants, not here.
+- `livespec-driver-pi-1zt` (blocked): the Fabro sandbox `gh` wrapper
+  hard-calls a `mint_app_token.py` that target repos do not vendor. Fleet-
+  wide; it blocks factory dispatch FROM this repo, not merges.
 
-2. **Fleet-manifest registration** in livespec core's
-   `.livespec-fleet-manifest.jsonc`, and the `livespec-sibling` GitHub topic.
-   These happen **LAST**, once everything above is done.
-
-**Deliberately not wired yet, because its subject does not exist:** the
-CLI-end-to-end harness. A gate is wired by the pass that creates what it guards
-— one shipped ahead of its subject is a red CI job that teaches nothing.
-(`check-doctor-static` was the other entry here; the `SPECIFICATION/` seed pass
-created its subject and wired it in the same change.)
-
-The CLI-end-to-end gate deserves its own sentence, because "the subject does not
-exist" is not the whole reason. The sibling Drivers' `tests/e2e-cli/` suites
-drive a REAL agent runtime end-to-end; the pi analogue would have to launch the
-pi CLI against a live model. That is a live-credential, live-network dependency,
-and the honest options are to wire it as a `real_only`-marked suite that CI skips
-(which gates nothing) or to leave it out until the acceptance drive that
-§"pi dogfooding constraints" already requires is run. It is left out. Do NOT
-substitute a mocked stand-in and call the gate satisfied — a fake pi CLI would
-verify only the fake.
-
-**Known upstream gap.** `.livespec.jsonc` declares `claude` and `codex` as
-EXEMPT harnesses but does not declare this repo's own `pi` harness. The
-shared `check-plugin-resolution` Verifier fails closed on an unknown
-harness key, and its `_KNOWN_HARNESSES` set in `livespec-dev-tooling` is
-currently `{"claude", "codex"}`. Extending that set (plus a pi runner in
-`_build_live_runners`) is upstream work in `livespec-dev-tooling`, filed
-there as `livespec-dev-tooling-a924`; adding the
-`"pi": { "status": "supported", ... }` entry here is the follow-up that
-lands with it.
+**Deliberately not wired, and not an oversight:** the CLI-end-to-end
+harness. A gate is wired by the pass that creates what it guards — one
+shipped ahead of its subject is a red CI job that teaches nothing. But
+"the subject does not exist" is not the whole reason here. The sibling
+Drivers' `tests/e2e-cli/` suites drive a REAL agent runtime end-to-end;
+the pi analogue would have to launch the pi CLI against a live model.
+That is a live-credential, live-network dependency, and the honest
+options are to wire it as a `real_only`-marked suite that CI skips (which
+gates nothing) or to leave it out until the acceptance drive that
+§"pi dogfooding constraints" already requires is run. It is left out. Do
+NOT substitute a mocked stand-in and call the gate satisfied — a fake pi
+CLI would verify only the fake. (`check-extension-quality` is NOT an
+exception to this: it typechecks and unit-tests the guard's own decision
+function, which needs no runtime at all.)
 
 ## Progressive guidance
 
@@ -249,3 +283,33 @@ without exception:
   orchestrator plugins (work-item stores, gap and drift capture). A Driver
   has ZERO dependencies on them, and they have ZERO dependencies on any
   Driver (load-bearing invariant).
+
+## CI runner routing
+
+Runner routing is a repo VARIABLE, never a workflow edit.
+
+Every gating job in `ci.yml` resolves its runner from
+`fromJSON(vars.CI_RUNNER_LABELS || '["ubuntu-latest"]')`. To route the
+gating jobs at a conforming self-hosted host, SET the repo variable
+`CI_RUNNER_LABELS` to that host's label; to return them to hosted
+capacity, unset it or set it to `'["ubuntu-latest"]'`. Neither direction
+needs a specification revision, and neither is a `.github/workflows/`
+change — `check-no-workflow-edits` refuses implementation branches that
+carry one, and the fleet App's `workflows` grant is withheld precisely so
+routing cannot be "fixed" that way.
+
+The hosted-capacity fallback is a merge-gate SAFETY property, not a
+convenience. `master` requires exactly one status context, `ci-green`,
+which `needs:` the check jobs. A job routed to self-hosted capacity that
+is not there does not FAIL — it sits in `queued`, `ci-green` never
+reports, and every merge waits on a check that will not arrive. That is
+why the literal `'["ubuntu-latest"]'` fallback is repeated inline at each
+`runs-on` rather than single-sourced through a job output: the fleet's
+self-hosted routing guard parses `runs-on` values STATICALLY, so routing
+hidden behind `needs.<job>.outputs.*` would read as "this workflow has no
+self-hosted job" and silently disable the forbidden-trigger check.
+
+CURRENT STATE: `CI_RUNNER_LABELS` is unset, so this repo runs on hosted
+capacity and is silently opted out of the fleet ARC k3s pool that
+`livespec-driver-codex` uses. Provisioning a pool and setting the
+variable is maintainer-only work, tracked as `livespec-driver-pi-pbmnua`.
