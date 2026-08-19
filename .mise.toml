@@ -1,12 +1,21 @@
 # livespec-driver-pi — developer-tooling pins (non-Python binaries only).
 #
 # Authority: livespec/SPECIFICATION/non-functional-requirements.md
-#   §"Toolchain pins" — non-Python binaries (uv, just, lefthook) pin via
-#   .mise.toml; Python interpreter + Python packages pin via uv against
+#   §"Toolchain pins" — non-Python binaries (uv, just, lefthook, node) pin
+#   via .mise.toml; Python interpreter + Python packages pin via uv against
 #   pyproject.toml's [project.requires-python] + [dependency-groups.dev].
+#
+# `node` is pinned because this repo ships FIRST-PARTY TypeScript — the
+# sanctioned `tool_call` footgun-guard extension — and `check-extension-quality`
+# typechecks it and runs its behavioral suite. Node's own type stripping runs
+# the `.ts` sources directly, so the pin buys both the typechecker host (npm +
+# tsc) and the test runner (`node --test`) with no bundler in the loop. The
+# npm-side pins live in package.json + package-lock.json, which is the npm
+# analogue of the uv/pyproject split above.
 
 [tools]
 uv       = "0.9.26"
 just     = "1.36.0"
 lefthook = "1.13.6"
 shellcheck = "0.11.0"
+node     = "26.3.0"

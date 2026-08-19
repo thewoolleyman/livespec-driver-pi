@@ -638,6 +638,47 @@ jobs:
             exit 1
           fi
 
+  # Quality gate over the ONE sanctioned pi extension (the TypeScript
+  # `tool_call` footgun guard). Its OWN job rather than a batch line for the
+  # same reason check-doctor-static has one: it is the only target needing a
+  # toolchain the batch jobs do not set up — node, plus an `npm ci` from the
+  # committed lockfile. Folding it into a batch would make every batched
+  # scanner pay that install.
+  #
+  # This job is a GATING job, so it is listed in ci-green.needs below. That
+  # listing is the whole point of the wiring: `master` requires exactly ONE
+  # status context, ci-green, so a job absent from its needs: list runs and
+  # reports but gates nothing.
+  check-extension-quality:
+    name: check-extension-quality
+    runs-on: ${{ fromJSON(vars.CI_RUNNER_LABELS || '["ubuntu-latest"]') }}
+    container:
+      image: ghcr.io/thewoolleyman/livespec-fabro-sandbox:python-v1.28.12
+    env:
+      MISE_DATA_DIR: /root/.local/share/mise
+      MISE_NOT_FOUND_AUTO_INSTALL: "0"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Trust workspace for git (hosted container root-vs-checkout uid)
+        run: git config --global --add safe.directory '*'
+
+      # Unlike the python jobs this is NOT a near-no-op: node is pinned in
+      # .mise.toml but is not baked into the python sandbox image, so this step
+      # is where it actually installs.
+      - name: mise trust + install (installs the pinned node)
+        run: |
+          mise trust
+          mise install
+
+      - name: just check-extension-quality
+        run: |
+          # mise shims on PATH so the recipe's `npm`/`npx`/`node` resolve to the
+          # pinned toolchain rather than whatever the image happens to carry.
+          export PATH="$MISE_DATA_DIR/shims:$PATH"
+          just check-extension-quality
+
   # livespec core's STATIC doctor phase over this repo's own SPECIFICATION/
   # tree. The checker (doctor_static.py — self-contained, bare python3) ships
   # with CORE, not with this Driver, so this job checks core out at the release
@@ -741,6 +782,7 @@ jobs:
       - check-metadata
       - check-metadata-batch
       - check-doctor-static
+      - check-extension-quality
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:

@@ -1,0 +1,38 @@
+{
+  // Typecheck-only configuration for this repo's first-party TypeScript: the
+  // sanctioned `tool_call` footgun-guard extension and its behavioral suite.
+  //
+  // NO EMIT, BY DESIGN. pi loads `extensions/*.ts` itself and the suite runs
+  // under Node's own type stripping (`node --test`), so nothing here ever
+  // produces JavaScript. tsc's only job is to be the typechecker that
+  // `check-pi-package-structure`'s text-level assertions structurally cannot
+  // be: a guard that does not compile, or whose predicate signatures drifted,
+  // passes every substring assertion and fails here.
+  //
+  // `erasableSyntaxOnly` is load-bearing, not stylistic. Node's type stripping
+  // refuses non-erasable TypeScript (enums, parameter properties, namespaces),
+  // and it refuses them AT RUNTIME — which for an extension means a wedged pi
+  // session, and for the suite means a gate that cannot run. This flag moves
+  // that failure to typecheck time.
+  "compilerOptions": {
+    "target": "es2023",
+    "lib": ["es2023"],
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "types": ["node"],
+    "strict": true,
+    "noUncheckedIndexedAccess": false,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    // The suite imports the guard by its literal `.ts` path because that is
+    // what Node's type stripping resolves; without this tsc rejects the
+    // extension it is being asked to check.
+    "allowImportingTsExtensions": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["extensions/**/*.ts", "tests/extensions/**/*.ts"]
+}

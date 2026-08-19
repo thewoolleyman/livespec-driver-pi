@@ -60,6 +60,7 @@ check-wrapper-shape
 check-spec-governance-default-block
 check-pi-package-structure
 check-pi-drive-output
+check-extension-quality
 check-lint
 check-format
 check-types
