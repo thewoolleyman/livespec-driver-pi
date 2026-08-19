@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/thewoolleyman/livespec-driver-pi/compare/v0.4.0...v0.5.0) (2026-08-19)
+
+
+### Features
+
+* gate the footgun-guard extension with typecheck + behavioral suite ([5ce07d7](https://github.com/thewoolleyman/livespec-driver-pi/commit/5ce07d7bb34e966939dde3ff42ad661ba159f77c))
+
 ## [0.4.0](https://github.com/thewoolleyman/livespec-driver-pi/compare/v0.3.0...v0.4.0) (2026-08-19)
 
 
