@@ -2,6 +2,7 @@
   "name": "livespec-driver-pi",
   "version": "0.4.0",
   "description": "pi Driver for livespec — eight thin livespec-<operation> SKILL.md bindings plus the sanctioned tool_call footgun-guard extension",
+  "type": "module",
   "private": true,
   "keywords": [
     "pi-package"
@@ -20,5 +21,10 @@
   },
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-coding-agent": "0.84.2",
+    "@types/node": "24.10.1",
+    "typescript": "5.9.3"
   }
 }

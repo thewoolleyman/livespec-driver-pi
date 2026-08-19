@@ -387,6 +387,18 @@ check-spec-governance-default-block:
 check-pi-package-structure:
     uv run python dev-tooling/check-pi-package-structure
 
+# Quality gate over the ONE sanctioned pi extension — the TypeScript
+# `tool_call` footgun guard. Two legs: `tsc --noEmit` over the extension and
+# its suite (with `erasableSyntaxOnly`, so it also proves the guard stays
+# loadable under Node's type stripping), then `node --test` over
+# `tests/extensions/`, driving the guard's exported `decide()` with no pi event
+# bus and nothing mocked. This is the coverage the sibling Drivers get for free
+# from the Python gates, which a TypeScript guard rides none of;
+# `check-pi-package-structure`'s text assertions cannot notice a guard that
+# stopped compiling or whose predicate inverted.
+check-extension-quality:
+    bash dev-tooling/check-extension-quality.sh
+
 # Regression gate for pi's unreliable raw exit status: unattended drives must
 # classify captured stdout/stderr and trust this tool's exit code instead of
 # `pi -p`'s own status when a model-call failure is printed.
