@@ -81,7 +81,7 @@ bindings here only for pi-runtime mechanics.
 | `dev-tooling/` | The family-standard enforcement scaffolds: the `just check` aggregate runner, the pre-push gate, the staged-ruff autofixer, the factory-branch workflow guard, and the repo-local gates (`check-spec-governance-default-block`, `check-pi-package-structure`, `check-pi-drive-output`, `check-extension-quality`, `check-doctor-static`). The worktree-discipline pack and the commit-refuse hooks are NOT tracked here — `just bootstrap` installs both from the shared `livespec-dev-tooling` package. |
 | `justfile`, `lefthook.yml`, `check-targets.txt`, `pyproject.toml` | Family-standard task runner, git-hook config, aggregate target list, and dev-tooling pins. |
 | `.github/` | Per-target matrix CI plus the seven fleet shim / release-automation workflows, and the closed-loop Honeycomb telemetry export script. |
-| `.claude/` | Project-scope Claude plugin enablement (`settings.json`) and the `CLAUDE.md` → `AGENTS.md` symlink. |
+| `.claude/` | Project-scope Claude plugin enablement plus the dev-time agent hooks (`settings.json`), and the `CLAUDE.md` → `AGENTS.md` symlink. The root `CLAUDE.md` symlink is the second half of that pair. |
 | `.ai/` | Progressive-load agent guidance: repo-specific operational notes that are too situational for this file and must not live in harness-local memory. Referenced from §"Progressive guidance" below, which is what makes `check-agents-ai-references-resolve` non-vacuous here. |
 | `tsconfig.json`, `package-lock.json` | Typecheck-only TS configuration (no emit; `erasableSyntaxOnly` keeps the guard loadable under Node's type stripping) and the npm lockfile `check-extension-quality` reconstructs `node_modules/` from. |
 | `.mise.toml`, `.python-version`, `.gitignore` | Family-standard toolchain configuration. `.mise.toml` pins `node` too, for the TypeScript extension's gate. |
@@ -283,6 +283,32 @@ without exception:
   orchestrator plugins (work-item stores, gap and drift capture). A Driver
   has ZERO dependencies on them, and they have ZERO dependencies on any
   Driver (load-bearing invariant).
+
+## Dev-time agent hooks (Claude Code sessions working ON this repo)
+
+`.claude/settings.json` wires two SHARED `livespec_dev_tooling` guards for
+sessions editing this repository — distinct from
+`extensions/livespec-footgun-guard.ts`, which is the SHIPPED pi-runtime
+guard this Driver distributes to its users:
+
+- `PreToolUse` (Bash) → `agent_hooks.pretooluse_background_guard`, which
+  denies bare-backgrounding a gate command (`just check`, `git commit`,
+  `git push`, the PR handoff). A backgrounded gate leaves the verdict only
+  in tool output, so a killed task or a turn-end loses it; the sanctioned
+  detached runner (`just gate-start` / `gate-wait`) is allowed instead.
+- `SubagentStop` → `agent_hooks.subagent_stop_guard`.
+
+Both are shared modules, so there is no repo-local hook body to drift.
+
+**Deliberate divergence from livespec-driver-claude:** that repo ALSO wires
+a third `PreToolUse` hook, a 276-line repo-local
+`.claude/hooks/livespec_footgun_guard.py`. This repo does not, and should
+not. Its footgun policy already exists here as first-party TypeScript,
+gated by `check-extension-quality`; vendoring a second implementation of
+the same four block predicates in a different language would give this repo
+two policies to keep in sync, and the family has no shared module to
+delegate to. The real backstops — the commit-refuse hooks and branch
+protection — are unaffected either way.
 
 ## CI runner routing
 

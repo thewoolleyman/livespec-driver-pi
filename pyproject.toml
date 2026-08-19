@@ -132,12 +132,19 @@ markers = [
 # from `resolve_check_universe()`, so an empty value makes them STRICTER
 # rather than blinder.
 [tool.livespec_dev_tooling]
-# Not armed at scaffold time: with no first-party product `.py` in the
-# universe the flag would be a claim about a set that does not exist. Arm it
-# in the same pass that lands a Python product surface, after measuring every
-# file against the 250-LLOC ceiling. This is a NOT-YET-EARNED severity
-# increase, never a bypass.
-file_lloc_hard_gate = false
+# ARMED, matching both sibling Drivers. The earlier note here left it false on
+# the reasoning that "with no first-party product `.py` in the universe the flag
+# would be a claim about a set that does not exist". The universe is indeed
+# still EMPTY — `iter_first_party_py_files` walks `git ls-files '*.py'` minus
+# the test tree, and this repo's `dev-tooling/` checkers are extensionless
+# executables, so they are outside it either way — which is precisely why
+# arming costs nothing: the severity applies only to files that exist when the
+# check runs. Pre-arming removes a future omission (the day a first-party `.py`
+# lands the hard ceiling is already in force, rather than depending on someone
+# remembering this follow-up), and `just check-file-lloc` passes armed today.
+# Reconsider only if a deliberate, documented over-ceiling file is ever
+# introduced — this is a severity floor, never a bypass.
+file_lloc_hard_gate = true
 plan_lifecycle_anchor = true
 scenario_tiers = ["tests.e2e-cli", "tests.e2e", "tests.integration", "tests.consumer", "tests.prompts", "tests.dev-tooling"]
 # EMPTY on purpose, and empty is the STRICT spelling for this key (its
