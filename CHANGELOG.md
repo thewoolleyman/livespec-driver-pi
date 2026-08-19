@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/thewoolleyman/livespec-driver-pi/compare/v0.3.0...v0.4.0) (2026-08-19)
+
+
+### Features
+
+* backfill fleet autonomy levers into .livespec.jsonc ([6da9c97](https://github.com/thewoolleyman/livespec-driver-pi/commit/6da9c97254a8e0aad79c99412d29f17e20810b2d))
+
 ## [0.3.0](https://github.com/thewoolleyman/livespec-driver-pi/compare/v0.2.3...v0.3.0) (2026-08-17)
 
 
