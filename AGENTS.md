@@ -80,6 +80,7 @@ bindings here only for pi-runtime mechanics.
 | `justfile`, `lefthook.yml`, `check-targets.txt`, `pyproject.toml` | Family-standard task runner, git-hook config, aggregate target list, and dev-tooling pins. |
 | `.github/` | Per-target matrix CI plus the seven fleet shim / release-automation workflows, and the closed-loop Honeycomb telemetry export script. |
 | `.claude/` | Project-scope Claude plugin enablement (`settings.json`) and the `CLAUDE.md` → `AGENTS.md` symlink. |
+| `.ai/` | Progressive-load agent guidance: repo-specific operational notes that are too situational for this file and must not live in harness-local memory. Referenced from §"Progressive guidance" below, which is what makes `check-agents-ai-references-resolve` non-vacuous here. |
 | `.mise.toml`, `.python-version`, `.gitignore` | Family-standard toolchain configuration. |
 
 ## Bootstrap status
@@ -188,6 +189,21 @@ currently `{"claude", "codex"}`. Extending that set (plus a pi runner in
 there as `livespec-dev-tooling-a924`; adding the
 `"pi": { "status": "supported", ... }` entry here is the follow-up that
 lands with it.
+
+## Progressive guidance
+
+Repo-specific operational notes live under `.ai/`, loaded on demand rather
+than inlined here (livespec core contracts §"Fleet agent-instruction core"
+— the progressive-disclosure convention; every reference below MUST
+resolve, which `check-agents-ai-references-resolve` enforces).
+
+- Read `.ai/beads-tenant.md` before running live `bd` or
+  livespec-orchestrator-beads-fabro commands against this repo's beads
+  tenant — the `-C` wrong-tenant hazard and the never-print rule for
+  `BEADS_DOLT_PASSWORD`.
+- Read `.ai/pi-runtime.md` before authoring a SKILL.md binding or driving
+  the `pi` CLI unattended — the fatal unquoted `: ` in frontmatter, and
+  `pi -p` exiting 0 on a failed model call.
 
 ## Repository mutation protocol
 
