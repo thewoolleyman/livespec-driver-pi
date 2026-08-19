@@ -43,6 +43,33 @@ Plus the ONE sanctioned pi extension: a TypeScript `tool_call`-blocking
 **footgun guard**, which per §"Driver-shipped hooks" must be in place
 before any mutating operation is claimed.
 
+**And nothing else — deliberately.** pi also supports PROMPT TEMPLATES
+(`pi.prompts` in the manifest, or a conventional `prompts/` directory),
+which would give bare `/livespec-<operation>` commands alongside the
+`/skill:` form. This Driver does NOT ship them. The question was deferred
+during bootstrap "until the live end-to-end exercise", that exercise
+happened (`livespec-ewqnqm` closed on real structured JSON from
+`pi -p "/skill:livespec-next"`), and the answer on the evidence is no:
+
+- A prompt template is a Markdown snippet that EXPANDS into prompt text.
+  Writing eight of them means writing eight descriptions of what each
+  operation does — a second place where the operation's intent lives.
+  This repo's one design rule is that a binding never copies operation
+  prose; a prompt layer would reintroduce exactly that drift surface for
+  six characters of typing.
+- The Driver surface is fixed by livespec core contracts §"Plugin
+  distribution" as the eight operations. A second invocation surface is a
+  contract question, not free ergonomics.
+- Nothing has asked for it. The deferral's reconsider condition fired
+  and produced no evidence of friction, because the only pi consumer
+  today is this repo dogfooding itself.
+
+RE-OPEN when a real pi consumer — an adopter, or a maintainer session
+that is not this repo's own dogfooding — reports the `/skill:` prefix as
+actual friction. That is a demand signal, not a calendar trigger, and it
+is cheap to satisfy if it arrives: the templates would be additive and
+would change no existing surface.
+
 ## The one design rule that matters here
 
 Each binding is thin and self-contained:
