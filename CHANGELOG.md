@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.1](https://github.com/thewoolleyman/livespec-driver-pi/compare/v0.5.0...v0.5.1) (2026-08-20)
+
+
+### Bug Fixes
+
+* **skill:** carry --only-topic in the revise invocation forms ([24c3189](https://github.com/thewoolleyman/livespec-driver-pi/commit/24c3189d7371e06e15802cfc9e6226037c3a3b85))
+
 ## [0.5.0](https://github.com/thewoolleyman/livespec-driver-pi/compare/v0.4.0...v0.5.0) (2026-08-19)
 
 
