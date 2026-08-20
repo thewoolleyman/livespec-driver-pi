@@ -1,6 +1,6 @@
 ---
 name: livespec-revise
-description: Walk the user through accepting or rejecting each pending proposed change in <spec-root>/proposed_changes/, then snapshot the result as a new <spec-root>/history/vNNN/ revision. Use when the user asks to revise the livespec or process pending proposed changes. This mutating operation rewrites spec files and writes a new history revision.
+description: Walk the user through accepting or rejecting pending proposed changes in <spec-root>/proposed_changes/, then snapshot the result as a new <spec-root>/history/vNNN/ revision. Covers every pending proposal by default, or ONE named proposal via --only-topic <topic> — leaving the rest in place — when the user asks to revise a single proposal or their authority covers only their own. Use when the user asks to revise the livespec, process pending proposed changes, or revise only the <topic> proposal. This mutating operation rewrites spec files and writes a new history revision.
 allowed-tools: bash read write edit
 ---
 
