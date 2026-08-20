@@ -416,7 +416,31 @@ self-hosted routing guard parses `runs-on` values STATICALLY, so routing
 hidden behind `needs.<job>.outputs.*` would read as "this workflow has no
 self-hosted job" and silently disable the forbidden-trigger check.
 
-CURRENT STATE: `CI_RUNNER_LABELS` is unset, so this repo runs on hosted
-capacity and is silently opted out of the fleet ARC k3s pool that
-`livespec-driver-codex` uses. Provisioning a pool and setting the
-variable is maintainer-only work, tracked as `livespec-driver-pi-pbmnua`.
+CURRENT STATE: `CI_RUNNER_LABELS` is `["livespec-driver-pi-k3s"]`, so the
+gating jobs run on the fleet ARC k3s pool on poweredge-xubuntu. Cut over
+2026-08-20 under `livespec-driver-pi-pbmnua`: ARC scale set
+`livespec-driver-pi-k3s` (helm chart 0.14.2, the same release the seven
+sibling scale sets run), Kueue ClusterQueue/LocalQueue
+`livespec-driver-pi-cq`/`-lq` in the `fleet-ci-runner-pool` cohort. To
+return to hosted capacity, set the variable to `'["ubuntu-latest"]'` —
+a variable change, never a workflow edit.
+
+`maxRunners` is **13**, and that number is this repo's OWN measured
+CI-matrix width, not a sibling's. Do not copy the 63-67 the other
+Drivers carry: those repos run a per-target matrix, one job per check
+slug, while this repo's `ci.yml` deliberately collapses its ~69 targets
+into batch jobs (`check-python-batch`, `check-metadata-batch`). Re-measure
+from a real run's job count before changing it.
+
+Two GitHub App grants are load-bearing here, and they are SEPARATE. The
+fleet automation App is what makes release-please and auto-merge work;
+the `thewoolleyman-ci-runners` App is what lets the scale set obtain a
+runner registration token. The second is repository-selection-scoped, so
+a repo holding only the first looks fully provisioned until a scale set
+is actually stood up and the controller fails with `403 Resource not
+accessible by integration` on the `actions/runners/registration-token`
+endpoint. That is a missing repository selection, NOT a wrong permission
+— this repo hit exactly that on 2026-08-20 and it cost a full attempt to
+diagnose. The canonical cross-repo record for the cutover is the
+"Real-traffic cutover log" in livespec
+`plan/fleet-ci-runner-pool/research/k3s-arc-kueue-migration.md`.
