@@ -210,31 +210,39 @@ ledger-held; what follows is orientation, not the source of truth:
   strict/up-to-date OFF. That single context is why adding a CI job without
   adding it to `ci-green`'s `needs:` list stops gating silently.
 
-**Open, each with a named carrier under epic `livespec-driver-pi-jvvhxi`:**
+**Open — the wrap-up epic's carriers are ALL closed; what remains is tracked elsewhere:**
 
-- `CI_RUNNER_LABELS` is UNSET, so every matrix job falls through
-  `fromJSON(vars.CI_RUNNER_LABELS || '["ubuntu-latest"]')` onto
-  GitHub-hosted runners — this repo is silently opted out of the fleet ARC
-  k3s pool, and green CI makes that invisible. Carrier
-  `livespec-driver-pi-pbmnua` (maintainer-only: it needs a scale set and a
-  repo-variable write). See §"CI runner routing" below before touching it.
-- The small parity items — the `file_lloc_hard_gate` decision and the
-  `.claude/settings.json` dev-time-hooks decision: carrier
-  `livespec-driver-pi-zazr4d`.
-- The adopter `.pi/settings.json` audit (openbrain, resume, homelab,
-  dolt-server): carrier `livespec-driver-pi-no6in2`.
-- The prompt-template layer (`/livespec-<op>` bare commands) adopt-or-
-  re-defer decision: carrier `livespec-driver-pi-jyuvlv`.
-- Upstream prevention, so the next hand-built Driver does not repeat these
-  omissions: a maintained per-class obligation list into livespec core
-  (`livespec-driver-pi-65yari`), `external_references` coverage in the
-  copier template (`livespec-driver-pi-ybsp4p`), and the decision on
-  whether `check-agents-ai-references-resolve` must detect `.ai/` ABSENCE
-  (`livespec-driver-pi-nwsjym`). These land in the livespec and
-  livespec-dev-tooling tenants, not here.
-- `livespec-driver-pi-1zt` (blocked): the Fabro sandbox `gh` wrapper
-  hard-calls a `mint_app_token.py` that target repos do not vendor. Fleet-
-  wide; it blocks factory dispatch FROM this repo, not merges.
+All eleven carriers under epic `livespec-driver-pi-jvvhxi` are CLOSED as
+of 2026-08-20. That epic is at its archive gate, not in progress; do not
+read the list below as its backlog. What is genuinely still open:
+
+- `livespec-driver-pi-1zt` (blocked, THIS tenant): the Fabro sandbox `gh`
+  wrapper hard-calls a `mint_app_token.py` that target repos do not
+  vendor. Fleet-wide; it blocks factory dispatch FROM this repo, not
+  merges. NOTE: the diagnosis recorded on the item itself was refuted
+  during the wrap-up — the real root cause is filed as `bd-ib-y4az3g`
+  (livespec-orchestrator-beads-fabro tenant), which is the item to work.
+- Upstream prevention, so the next hand-built Driver does not repeat this
+  repo's omissions. These land in the livespec and livespec-dev-tooling
+  tenants, NOT here, and each is open in its owning tenant:
+  `livespec-icfycf` (the maintained per-class obligation list; livespec
+  PR #2429 merged a PENDING proposed change and a `/livespec:revise`
+  decides it) and `livespec-dev-tooling-xaxj5w` (whether
+  `check-agents-ai-references-resolve` must detect `.ai/` ABSENCE).
+- `bd-ib-c2sasn` (livespec-orchestrator-beads-fabro tenant): a
+  ledger-timeline handoff verifier.
+- `livespec-dev-tooling-5g3c` (livespec-dev-tooling tenant): that repo's
+  `uv.lock` self-entry is one release stale against `pyproject.toml`, so
+  any `uv run` there dirties the tree.
+
+Closed by that epic, and recorded here only because their absence used to
+be listed as a gap: the `CI_RUNNER_LABELS` / k3s scale-set cutover
+(`livespec-driver-pi-pbmnua` — see §"CI runner routing" for CURRENT
+state), the `file_lloc_hard_gate` and `.claude/settings.json`
+dev-time-hooks decisions (`-zazr4d`), the adopter `.pi/settings.json`
+audit (`-no6in2`), the prompt-template adopt-or-re-defer decision
+(`-jyuvlv`), and the three upstream-prevention routings (`-65yari`,
+`-ybsp4p`, `-nwsjym`) whose downstream items are named above.
 
 **Deliberately not wired, and not an oversight:** the CLI-end-to-end
 harness. A gate is wired by the pass that creates what it guards — one
