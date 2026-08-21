@@ -200,14 +200,14 @@
       // core's latest RELEASE tag (never raw master); the cross-repo
       // release-dispatch fan-out rewrites it on each new core release.
       "livespec": ">=0.1.0,<1.0.0",
-      "pinned": "v0.37.0"
+      "pinned": "v0.37.1"
     }
   },
   "livespec-orchestrator-beads-fabro": {
     "format": "beads",
     "compat": {
       "livespec": ">=0.1.0,<1.0.0",
-      "pinned": "v0.37.0"
+      "pinned": "v0.37.1"
     },
     // Per-repo beads tenant CONNECTION block, mirrored by .beads/config.yaml.
     // `prefix` == `tenant` == `database` == `server_user` == this repo's
