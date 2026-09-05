@@ -409,9 +409,11 @@ gating jobs at a conforming self-hosted host, SET the repo variable
 `CI_RUNNER_LABELS` to that host's label; to return them to hosted
 capacity, unset it or set it to `'["ubuntu-latest"]'`. Neither direction
 needs a specification revision, and neither is a `.github/workflows/`
-change — `check-no-workflow-edits` refuses implementation branches that
-carry one, and the fleet App's `workflows` grant is withheld precisely so
-routing cannot be "fixed" that way.
+change — `check-no-workflow-edits` (the worktree pack's shared guard,
+livespec-dev-tooling-fy02, whose only override is a ledger-verified human
+authorization) refuses implementation branches that carry one, and the
+fleet App's `workflows` grant is withheld precisely so routing cannot be
+"fixed" that way.
 
 The hosted-capacity fallback is a merge-gate SAFETY property, not a
 convenience. `master` requires exactly one status context, `ci-green`,
