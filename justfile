@@ -75,9 +75,10 @@ install-commit-refuse-hooks:
     uv run python -m livespec_dev_tooling.install_commit_refuse_hooks
 
 # Install (or idempotently re-install) the canonical worktree-discipline pack —
-# FOUR files: `worktree-lib.sh` + `branch-protection.sh` (executable) and
-# `worktree.just` + `branch-protection.just` (imported above, not executable) —
-# into the current checkout's `dev-tooling/` directory. The livespec-dev-tooling
+# SIX bodies: `worktree-lib.sh` + `branch-protection.sh` + `gate-run.sh` +
+# `check-no-workflow-edits.sh` (executable) and `worktree.just` +
+# `branch-protection.just` (imported above, not executable), plus a generated
+# `dev-tooling/.gitignore` — into the current checkout's `dev-tooling/` directory. The livespec-dev-tooling
 # installer module is the single canonical-body carrier. The pack files are
 # GITIGNORED-AND-MATERIALIZED, never tracked. `bootstrap` covers this
 # automatically via the `worktree-pack` LOCAL obligation row, so this recipe is
@@ -104,9 +105,13 @@ ensure-plugins:
 check:
     bash dev-tooling/check-aggregate.sh
 
-# Factory-branch guard: implementation branches must not carry workflow edits.
-# Maintainer-side workflow diffs are reported out-of-band instead of landing
-# from Fabro slices.
+# Factory-branch workflow-edit guard: delegates to the worktree pack's single
+# canonical body (`dev-tooling/check-no-workflow-edits.sh`, installed by
+# `just install-worktree-pack`, never tracked here — livespec-dev-tooling-fy02).
+# A `.github/workflows/` change on an implementation branch is refused unless
+# it carries the ledger-verified HUMAN authorization the pack body defines; no
+# environment variable or flag bypasses it. Repo-LOCAL slug: it runs in the
+# `check` aggregate (pre-push) and the Dispatcher janitor, NOT in CI.
 check-no-workflow-edits:
     bash dev-tooling/check-no-workflow-edits.sh
 

@@ -4,12 +4,19 @@ tmp/
 # Worktree-discipline pack — installed from the livespec-dev-tooling package
 # (the single canonical source) into dev-tooling/ at bootstrap, NEVER tracked
 # here, mirroring how the commit-refuse hooks are installed into the untracked
-# shared .git/hooks/ dir. The pack is four files: the two executable shell
-# scripts plus the `worktree.just` and `branch-protection.just` recipe
-# fragments the root justfile `import?`s. `just bootstrap` materializes them
-# via the `worktree-pack` LOCAL obligation row.
+# shared .git/hooks/ dir. The pack is six bodies plus a generated
+# `dev-tooling/.gitignore`: the four executable shell scripts (`worktree-lib.sh`,
+# `branch-protection.sh`, `gate-run.sh`, and `check-no-workflow-edits.sh` — the
+# fleet's ONE workflow-edit guard, livespec-dev-tooling-fy02, which the
+# `check-no-workflow-edits` recipe delegates to; NO tracked copy and NO
+# environment-variable escape lives in this repo) plus the `worktree.just` and
+# `branch-protection.just` recipe fragments the root justfile `import?`s.
+# `just bootstrap` materializes them via the `worktree-pack` LOCAL obligation
+# row.
 /dev-tooling/worktree-lib.sh
 /dev-tooling/branch-protection.sh
+/dev-tooling/gate-run.sh
+/dev-tooling/check-no-workflow-edits.sh
 /dev-tooling/worktree.just
 /dev-tooling/branch-protection.just
 .claude/settings.local.json
