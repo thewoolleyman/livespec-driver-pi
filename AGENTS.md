@@ -343,12 +343,20 @@ without exception:
    equals its git-common-dir; a secondary worktree's differs).
 2. Create a dedicated worktree from `master` under the per-user root
    `~/.worktrees/livespec-driver-pi/<branch>` — never as a peer of the clones
-   under `/data/projects`:
+   under `/data/projects`. Create it with the worktree-discipline pack's
+   recipe, which adds the worktree under that root, provisions the
+   gitignored pack into it, and runs the hydrate hook (run it from the
+   primary checkout):
 
    ```bash
-   mise exec -- git -C /data/projects/livespec-driver-pi worktree add \
-       -b <branch> "$HOME/.worktrees/livespec-driver-pi/<branch>" master
+   mise exec -- just worktree-create <branch>
    ```
+
+   A raw `mise exec -- git -C /data/projects/livespec-driver-pi worktree add -b <branch>
+   "$HOME/.worktrees/livespec-driver-pi/<branch>" master` also yields a usable
+   worktree — the pre-commit and pre-push hooks install the pack before
+   any gate reads it, so the worktree can commit and push with no
+   `just bootstrap` — but it skips hydration, so prefer the recipe.
 
 3. Use `mise exec -- git commit ...` / `mise exec -- git push ...` so the
    mise-managed lefthook hooks actually run. **Never** pass `--no-verify`;
