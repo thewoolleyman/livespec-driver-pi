@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.2](https://github.com/thewoolleyman/livespec-driver-pi/compare/v0.5.1...v0.5.2) (2026-09-10)
+
+
+### Bug Fixes
+
+* declare canonical git author policy ([6c11d41](https://github.com/thewoolleyman/livespec-driver-pi/commit/6c11d41d757685f24e56b8ea391a41b77fa7a537))
+
 ## [0.5.1](https://github.com/thewoolleyman/livespec-driver-pi/compare/v0.5.0...v0.5.1) (2026-08-20)
 
 
