@@ -3,9 +3,9 @@
     "spec_root": "SPECIFICATION",
     "spec_file": "spec.md",
     "heading": "## Purpose",
-    "test": "TODO",
+    "test": "tests.dev-tooling.test_check_pi_package_structure.test_this_repository_conforms",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+    "reason": "Realized by the structural gate run against THIS repo's real tree: the shipped pi package (eight bindings, resolver, guard extension, manifest) conforms — witnessing the 'ships bindings + resolver + one guard extension' purpose."
   },
   {
     "spec_root": "SPECIFICATION",
@@ -13,7 +13,7 @@
     "heading": "## Scope boundary",
     "test": "TODO",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+    "reason": "RESIDUAL — B: spec-restructure candidate (meta/glossary/inherited; no check, no behavior)"
   },
   {
     "spec_root": "SPECIFICATION",
@@ -21,15 +21,15 @@
     "heading": "## Terminology",
     "test": "TODO",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+    "reason": "RESIDUAL — B: spec-restructure candidate (meta/glossary/inherited; no check, no behavior)"
   },
   {
     "spec_root": "SPECIFICATION",
     "spec_file": "spec.md",
     "heading": "## Public surface",
-    "test": "TODO",
+    "test": "tests.dev-tooling.test_check_pi_package_structure.test_missing_skill_is_reported",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+    "reason": "Realized by the structural gate: the eight livespec-<operation> bindings are the public surface; a missing binding is reported (control arm: the conforming tree passes)."
   },
   {
     "spec_root": "SPECIFICATION",
@@ -37,23 +37,23 @@
     "heading": "## Lifecycle and evolution",
     "test": "TODO",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+    "reason": "RESIDUAL — A: enforced only by CORE doctor-static (out-of-band-edits / history), not importable in-process + subprocess-banned -> not pytest-mappable"
   },
   {
     "spec_root": "SPECIFICATION",
     "spec_file": "contracts.md",
     "heading": "## pi package manifest",
-    "test": "TODO",
+    "test": "tests.dev-tooling.test_check_pi_package_structure.test_manifest_naming_an_absent_directory_is_reported",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+    "reason": "Conformance: the structural gate validates the package.json pi manifest (pi-package keyword, declared resource dirs) — a manifest naming an absent resource directory is reported; the conforming tree is the control arm."
   },
   {
     "spec_root": "SPECIFICATION",
     "spec_file": "contracts.md",
     "heading": "## Skill-binding set",
-    "test": "TODO",
+    "test": "tests.dev-tooling.test_check_pi_package_structure.test_undeclared_skill_directory_is_reported",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+    "reason": "Conformance: the structural gate enforces exactly the eight bindings — an extra/undeclared skill directory (and a missing one) is reported."
   },
   {
     "spec_root": "SPECIFICATION",
@@ -67,17 +67,17 @@
     "spec_root": "SPECIFICATION",
     "spec_file": "contracts.md",
     "heading": "## Config-named CLI dispatch",
-    "test": "TODO",
+    "test": "tests.dev-tooling.test_check_pi_package_structure.test_noncanonical_fenced_invocations_are_reported",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+    "reason": "Conformance: the structural gate enforces canonical wrapper invocation inside fenced regions — a non-canonical fenced invocation is reported."
   },
   {
     "spec_root": "SPECIFICATION",
     "spec_file": "contracts.md",
     "heading": "## Footgun-guard extension",
-    "test": "TODO",
+    "test": "tests.extensions.livespec_footgun_guard",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+    "reason": "Integration-tier (TS guard suite run by check-extension-quality via `node --test`, driving the guard's exported decide()): the guard blocks the never-legitimate forms (hook-bypass, lefthook-disable, core.bare set, primary-checkout writes) and passes data/unknown tools through, exit-safe."
   },
   {
     "spec_root": "SPECIFICATION",
@@ -93,15 +93,15 @@
     "heading": "## Inherited from livespec",
     "test": "TODO",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+    "reason": "RESIDUAL — B: spec-restructure candidate (meta/glossary/inherited; no check, no behavior)"
   },
   {
     "spec_root": "SPECIFICATION",
     "spec_file": "constraints.md",
     "heading": "## Binding constraints",
-    "test": "TODO",
+    "test": "tests.dev-tooling.test_check_pi_package_structure.test_claude_plugin_skills_reference_is_reported",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+    "reason": "Conformance: the structural gate enforces the thin pi-only binding shape — a reference to a Claude .claude-plugin skills tree in a binding is reported."
   },
   {
     "spec_root": "SPECIFICATION",
@@ -115,25 +115,25 @@
     "spec_root": "SPECIFICATION",
     "spec_file": "constraints.md",
     "heading": "## Guard constraints",
-    "test": "TODO",
+    "test": "tests.extensions.livespec_footgun_guard",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+    "reason": "Integration-tier (TS guard suite run by check-extension-quality via `node --test`, driving the guard's exported decide()): the guard's predicates and its internal catch (pass-through on error, data-not-invocation) are exercised across the never-legitimate forms."
   },
   {
     "spec_root": "SPECIFICATION",
     "spec_file": "constraints.md",
     "heading": "## Structural-check constraints",
-    "test": "TODO",
+    "test": "tests.dev-tooling.test_check_pi_package_structure.test_main_exits_two_and_names_each_violation",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+    "reason": "Conformance: the structural gate is fail-closed and stdlib-only — main exits 2 naming each violation on a defective tree, and exits 0 on the conforming tree (test_main_exits_zero_and_summarizes_on_a_conforming_tree)."
   },
   {
     "spec_root": "SPECIFICATION",
     "spec_file": "constraints.md",
     "heading": "## Forbidden patterns",
-    "test": "TODO",
+    "test": "tests.dev-tooling.test_check_pi_package_structure.test_inline_resolution_without_the_shared_resolver_is_reported",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+    "reason": "Conformance: the structural gate catches forbidden patterns — inline core-root resolution bypassing the shared resolver, and non-canonical fenced invocations, are reported."
   },
   {
     "spec_root": "SPECIFICATION",
@@ -141,7 +141,7 @@
     "heading": "## Boundary",
     "test": "TODO",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+    "reason": "RESIDUAL — B: spec-restructure candidate (meta/glossary/inherited; no check, no behavior)"
   },
   {
     "spec_root": "SPECIFICATION",
@@ -173,15 +173,15 @@
     "heading": "## Scenarios",
     "test": "TODO",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. This Driver's non-scenario spec headings are mechanically guarded today by check-pi-package-structure (the manifest, the eight-binding set, the canonical wrapper invocations, prune-history's explicit-invocation posture, and the guard's registration, four predicates, and internal catch) and by check-doctor-static over this tree, rather than by per-heading unit tests. Replace TODO with a specific pytest node id through a governed propose-change/revise resulting_files[] update when one is authored."
+    "reason": "RESIDUAL — LIVE: attended pi-runtime acceptance (live model/trust; not hermetically testable) — a mocked stand-in is spec-forbidden"
   },
   {
     "spec_root": "SPECIFICATION",
     "spec_file": "scenarios.md",
     "heading": "## Scenario: the installed Driver exposes the eight livespec operations",
-    "test": "TODO",
+    "test": "tests.dev-tooling.test_check_pi_package_structure.test_this_repository_conforms",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+    "reason": "Integration-tier: the structural gate against THIS repo confirms the eight livespec-<operation> bindings (and only those) ship — the surface the installed Driver exposes."
   },
   {
     "spec_root": "SPECIFICATION",
@@ -189,7 +189,7 @@
     "heading": "## Scenario: core-root resolution honors the operator override",
     "test": "TODO",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above — never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
   },
   {
     "spec_root": "SPECIFICATION",
@@ -197,7 +197,7 @@
     "heading": "## Scenario: core-root resolution falls back to the governed-project checkout",
     "test": "TODO",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above — never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
   },
   {
     "spec_root": "SPECIFICATION",
@@ -205,7 +205,7 @@
     "heading": "## Scenario: core-root resolution falls back to the project-scope package clone",
     "test": "TODO",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above — never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
   },
   {
     "spec_root": "SPECIFICATION",
@@ -213,7 +213,7 @@
     "heading": "## Scenario: core-root resolution falls back to the user-scope package clone",
     "test": "TODO",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above — never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
   },
   {
     "spec_root": "SPECIFICATION",
@@ -221,7 +221,7 @@
     "heading": "## Scenario: a clone present but without prose fails loudly rather than resolving",
     "test": "TODO",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above — never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
   },
   {
     "spec_root": "SPECIFICATION",
@@ -229,7 +229,7 @@
     "heading": "## Scenario: an override that resolves nothing is reported as a configuration error",
     "test": "TODO",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above — never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
   },
   {
     "spec_root": "SPECIFICATION",
@@ -237,102 +237,102 @@
     "heading": "## Scenario: an untrusted non-interactive invocation resolves nothing",
     "test": "TODO",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+    "reason": "RESIDUAL — LIVE: attended pi-runtime acceptance, not hermetically testable at integration tier. pi's trust gating (silently ignoring project-local settings/packages for an untrusted non-interactive invocation) is live pi-runtime behavior against a real trust decision; the spec forbids a mocked stand-in. No integration-tier hermetic test can exercise it; verified only in the attended pi acceptance drive."
   },
   {
     "spec_root": "SPECIFICATION",
     "spec_file": "scenarios.md",
     "heading": "## Scenario: the guard blocks a hook-bypassing commit or push",
-    "test": "TODO",
+    "test": "tests.extensions.livespec_footgun_guard",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+    "reason": "Integration-tier (TS guard suite run by check-extension-quality via `node --test`, driving the guard's exported decide()): blocks the bare --no-verify forms on commit and push (and -n meaning --no-verify on commit)."
   },
   {
     "spec_root": "SPECIFICATION",
     "spec_file": "scenarios.md",
     "heading": "## Scenario: the guard blocks an invocation that disables lefthook",
-    "test": "TODO",
+    "test": "tests.extensions.livespec_footgun_guard",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+    "reason": "Integration-tier (TS guard suite run by check-extension-quality via `node --test`, driving the guard's exported decide()): blocks the LEFTHOOK=0/false disabling spellings (and does not block a legitimate LEFTHOOK value)."
   },
   {
     "spec_root": "SPECIFICATION",
     "spec_file": "scenarios.md",
     "heading": "## Scenario: the guard blocks setting a checkout bare",
-    "test": "TODO",
+    "test": "tests.extensions.livespec_footgun_guard",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+    "reason": "Integration-tier (TS guard suite run by check-extension-quality via `node --test`, driving the guard's exported decide()): blocks the truthy core.bare set spellings (and does not block reading it or setting it false)."
   },
   {
     "spec_root": "SPECIFICATION",
     "spec_file": "scenarios.md",
     "heading": "## Scenario: the guard blocks a write at a livespec primary checkout",
-    "test": "TODO",
+    "test": "tests.extensions.livespec_footgun_guard",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+    "reason": "Integration-tier (TS guard suite run by check-extension-quality via `node --test`, driving the guard's exported decide()): blocks a write tool or a shell redirection aimed into a repo that declares itself the livespec primary checkout (and leaves ordinary worktrees alone)."
   },
   {
     "spec_root": "SPECIFICATION",
     "spec_file": "scenarios.md",
     "heading": "## Scenario: the guard passes through a forbidden string carried as data",
-    "test": "TODO",
+    "test": "tests.extensions.livespec_footgun_guard",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+    "reason": "Integration-tier (TS guard suite run by check-extension-quality via `node --test`, driving the guard's exported decide()): treats a quoted mention or a here-doc body as data, not an invocation — no block."
   },
   {
     "spec_root": "SPECIFICATION",
     "spec_file": "scenarios.md",
     "heading": "## Scenario: a guard error yields a pass-through rather than a block",
-    "test": "TODO",
+    "test": "tests.extensions.livespec_footgun_guard",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+    "reason": "Integration-tier (TS guard suite run by check-extension-quality via `node --test`, driving the guard's exported decide()): ignores a non-string command and unknown tools — the internal catch yields a pass-through rather than a block."
   },
   {
     "spec_root": "SPECIFICATION",
     "spec_file": "scenarios.md",
     "heading": "## Scenario: prune-history is never auto-activated",
-    "test": "TODO",
+    "test": "tests.dev-tooling.test_check_pi_package_structure.test_prune_history_controls_are_required",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+    "reason": "Integration-tier: the structural gate requires the explicit-invocation-only prune-history controls in the binding — prune-history is never auto-activated."
   },
   {
     "spec_root": "SPECIFICATION",
     "spec_file": "scenarios.md",
     "heading": "## Scenario: a mutating operation stops when the guard is not loaded",
-    "test": "TODO",
+    "test": "tests.dev-tooling.test_check_pi_package_structure.test_missing_extension_is_reported",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+    "reason": "Integration-tier: the structural gate requires the guard extension be present and registered (a missing extension is reported), which is what ensures the guard loads so a mutating operation is gated; the runtime stop when it is genuinely unloaded is the attended acceptance half."
   },
   {
     "spec_root": "SPECIFICATION",
     "spec_file": "scenarios.md",
     "heading": "## Scenario: the structural gate rejects a missing or extra binding",
-    "test": "TODO",
+    "test": "tests.dev-tooling.test_check_pi_package_structure.test_undeclared_skill_directory_is_reported",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+    "reason": "Integration-tier: the structural gate reports a missing binding (test_missing_skill_is_reported) and an extra/undeclared skill directory; the conforming tree is the control arm."
   },
   {
     "spec_root": "SPECIFICATION",
     "spec_file": "scenarios.md",
     "heading": "## Scenario: the structural gate rejects a non-canonical wrapper invocation",
-    "test": "TODO",
+    "test": "tests.dev-tooling.test_check_pi_package_structure.test_noncanonical_fenced_invocations_are_reported",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+    "reason": "Integration-tier: the structural gate reports a non-canonical fenced wrapper invocation; a wrapper reference outside a fence is treated as narration (control arm)."
   },
   {
     "spec_root": "SPECIFICATION",
     "spec_file": "scenarios.md",
     "heading": "## Scenario: the structural gate rejects a manifest naming an absent resource directory",
-    "test": "TODO",
+    "test": "tests.dev-tooling.test_check_pi_package_structure.test_manifest_naming_an_absent_directory_is_reported",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+    "reason": "Integration-tier: the structural gate reports a manifest whose declared resource directory is absent from the tree."
   },
   {
     "spec_root": "SPECIFICATION",
     "spec_file": "scenarios.md",
     "heading": "## Scenario: a commit at the primary checkout is refused",
-    "test": "TODO",
+    "test": "tests.extensions.livespec_footgun_guard",
     "work_item": "livespec-driver-pi-43a",
-    "reason": "Seeded with this repo's SPECIFICATION/ tree at v001. A scenario describes end-to-end behavior, so its mapped test MUST resolve to the INTEGRATION tier or above \u2014 never a unit-tier test. No integration-tier suite exists here yet: the pi analogue of the sibling Drivers' e2e harness would have to launch the pi CLI against a live model, which is a live-credential, live-network dependency deliberately left unwired rather than faked (a mocked pi CLI verifies only the mock). Replace TODO with an integration-tier or e2e-tier pytest node id through a governed propose-change/revise resulting_files[] update when that harness lands."
+    "reason": "Integration-tier (TS guard suite run by check-extension-quality via `node --test`, driving the guard's exported decide()): blocks a write/redirection into a repo that declares itself the livespec primary checkout — the Driver-side guard realizing the primary-checkout commit-refuse discipline; the core commit-refuse hook is the attended backstop."
   }
 ]

@@ -146,7 +146,7 @@ markers = [
 # introduced — this is a severity floor, never a bypass.
 file_lloc_hard_gate = true
 plan_lifecycle_anchor = true
-scenario_tiers = ["tests.e2e-cli", "tests.e2e", "tests.integration", "tests.consumer", "tests.prompts", "tests.dev-tooling"]
+scenario_tiers = ["tests.e2e-cli", "tests.e2e", "tests.integration", "tests.consumer", "tests.prompts", "tests.dev-tooling", "tests.extensions"]
 # EMPTY on purpose, and empty is the STRICT spelling for this key (its
 # consuming checks derive their universe from `resolve_check_universe()`, so an
 # empty value narrows the exemption rather than blinding a scan). The pi
