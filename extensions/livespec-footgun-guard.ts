@@ -82,12 +82,6 @@ const PRIMARY_EDIT_REASON =
 	"~/.worktrees/<repo>/<branch> -b <branch> origin/master`, then PR, merge, " +
 	"cleanup.";
 
-const RAW_BD_CREATE_REASON =
-	"This project is livespec-governed. A raw `bd create` is NOT the intake path " +
-	"here: it files the work-item at the beads-native status `open`, OUTSIDE the " +
-	"runtime's livespec status vocabulary, so the item strands in backlog — it " +
-	"never runs the intake Definition-of-Ready gate and never reaches the factory.";
-
 /** Wrappers that merely re-exec another command, with the flags of THEIRS that
  * consume a following argument. Each is a bypass if treated as the invocation
  * instead of stripped: `env -i git commit --no-verify` hides the git call
@@ -544,6 +538,31 @@ function implPlugin(projectDir: string): string | null {
 	return typeof plugin === "string" && plugin.trim().length > 0 ? plugin.trim() : null;
 }
 
+/** The intake-routing block message, naming the project's capture-work-item skill.
+ *
+ * `plugin` is resolved from `.livespec.jsonc` and NEVER hardcoded: the message has
+ * to name the operation THIS project routes intake to. pi's skill namespace is
+ * FLAT, so the Claude Driver's `/<plugin>:capture-work-item` spelling cannot be
+ * expressed — the route is the single flat skill name under `/skill:`. */
+function rawBdCreateReason(plugin: string): string {
+	return (
+		"This project is livespec-governed. A raw `bd create` is NOT the intake " +
+		"path here: it files the work-item at the beads-native status `open`, " +
+		"OUTSIDE the runtime's livespec status vocabulary, so the item strands in " +
+		"backlog — it never runs the intake Definition-of-Ready gate and never " +
+		"reaches the factory.\n" +
+		`  - File the work-item with /skill:${plugin}-capture-work-item instead. ` +
+		"It runs the Definition-of-Ready gate and routes the status, which is what " +
+		"makes an item dispatchable.\n" +
+		"  - Do NOT re-run this create by another spelling, and do NOT drop what " +
+		"you were about to file.\n" +
+		"The two surfaces that already go loud about a stranded item — the armed " +
+		"`work_item_status_vocabulary` check and the orchestrator's " +
+		"`untriaged_backlog_items` needs-attention lane — report it only AFTER it " +
+		"is filed. This redirect is what prevents it."
+	);
+}
+
 /** The intake redirect, consulted only after the four footgun predicates decline.
  *
  * pi exposes no project-directory handle — there is no `PI_PROJECT_DIR` and the
@@ -555,10 +574,11 @@ function rawBdCreateDecision(command: string): GuardDecision {
 	if (!runsRawBdCreate(command)) {
 		return undefined;
 	}
-	if (implPlugin(process.cwd()) === null) {
+	const plugin = implPlugin(process.cwd());
+	if (plugin === null) {
 		return undefined;
 	}
-	return { block: true, reason: RAW_BD_CREATE_REASON };
+	return { block: true, reason: rawBdCreateReason(plugin) };
 }
 
 function bashDecision(command: string): GuardDecision {
