@@ -111,6 +111,11 @@ const GIT_GLOBAL_OPTS_WITH_ARG = [
 const BD_COMMAND = "bd";
 const CREATE_SUBCOMMAND = "create";
 const LIVESPEC_CONFIG = ".livespec.jsonc";
+// `;`, `|`, and `&` all end the command whose arguments the subcommand walk is
+// reading, so a worded token carrying one is the boundary rather than an argument.
+// A newline is NOT in this set: the worder consumes it as whitespace, so no token
+// can carry one — line boundaries are handled by splitting BEFORE wording instead.
+const SHELL_CONTROL = ";|&";
 
 const ENV_ASSIGN = /^[A-Za-z_][A-Za-z0-9_]*=/;
 const LEFTHOOK_OFF = /^LEFTHOOK=(?:0|false|off|no)$/i;
@@ -444,20 +449,32 @@ export function shellSplit(line: string): string[] | null {
 }
 
 /** True when this `bd` head's OWN argument run carries the `create` subcommand.
+ *
  * Walking rather than matching position 1 is what lets beads' global flags sit in
- * between — `bd -C <dir> create …` is the documented family spelling. */
+ * between — `bd -C <dir> create …` is the documented family spelling. The walk
+ * STOPS at the first token carrying shell control punctuation, because that is
+ * where this command's argument run ends and the next command begins: without the
+ * stop, `bd list && grep create f` reads as a create. */
 function reachesCreate(argumentRun: string[]): boolean {
-	return argumentRun.includes(CREATE_SUBCOMMAND);
+	for (const argument of argumentRun) {
+		if ([...argument].some((char) => SHELL_CONTROL.includes(char))) {
+			return false;
+		}
+		if (argument === CREATE_SUBCOMMAND) {
+			return true;
+		}
+	}
+	return false;
 }
 
-/** True when `command` runs `bd create` at ANY of its token positions.
+/** True when ONE line runs `bd create` at any of its token positions.
  *
  * Scanning every position, rather than consulting an allowlist of known
  * wrappers, is what defeats a wrapper prefix: `mise exec -- bd create …`,
  * `env -i bd create …`, and `with-livespec-env.sh -- bd … create …` all carry a
  * `bd` token whose own argument run reaches `create`. */
-export function runsRawBdCreate(command: string): boolean {
-	const tokens = shellSplit(command);
+function lineRunsCreate(line: string): boolean {
+	const tokens = shellSplit(line);
 	if (tokens === null) {
 		return false;
 	}
@@ -465,6 +482,33 @@ export function runsRawBdCreate(command: string): boolean {
 		(token, index) =>
 			(token.split("/").pop() ?? "") === BD_COMMAND && reachesCreate(tokens.slice(index + 1)),
 	);
+}
+
+/** The lines the shell runs in sequence, or the whole command.
+ *
+ * The LINE split comes BEFORE wording because a newline is ordinary whitespace to
+ * the worder: judging a whole multi-line command fuses `bd list` on one line with
+ * a bare `create` word on the next, and the argument walk cannot tell them apart.
+ *
+ * A quoted string may itself SPAN line breaks (a multi-line title), and then no
+ * line words on its own. Judging the whole command instead restores the balanced
+ * quote — and that is the one case where the newline-fusing this split exists to
+ * prevent cannot occur anyway, since the newline is inside quotes. */
+function commandLines(command: string): string[] {
+	const lines = command.split("\n").filter((line) => line.trim().length > 0);
+	if (lines.length < 2) {
+		return [command];
+	}
+	return lines.every((line) => shellSplit(line) !== null) ? lines : [command];
+}
+
+/** True when any line of `command` runs `bd create`.
+ *
+ * Blocking a read-only invocation is the costlier error here: a missed create is
+ * still reported by the two loud surfaces named above, while a wrongly blocked
+ * command stops legitimate work with a message that does not describe it. */
+export function runsRawBdCreate(command: string): boolean {
+	return commandLines(command).some((line) => lineRunsCreate(line));
 }
 
 /** String-aware removal of JSONC's two comment forms, line and block. The
