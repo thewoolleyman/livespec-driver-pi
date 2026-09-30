@@ -254,6 +254,30 @@ describe("raw `bd create` intake redirect", () => {
 		);
 	});
 
+	it("names the capture-work-item skill resolved from the project's config", () => {
+		// pi's skill namespace is FLAT, so the Claude Driver's
+		// `/<plugin>:capture-work-item` spelling cannot be expressed here — the
+		// route is the single flat skill name. The namespace is a PROJECT FACT, so
+		// the same command under a different config names a different skill.
+		const fabro = governedProject();
+		const plaintext = governedProject({ plugin: "livespec-impl-plaintext" });
+		const fabroReason = inProject(fabro, () => reason("bd create -t x"));
+		const plaintextReason = inProject(plaintext, () => reason("bd create -t x"));
+		assert.match(fabroReason, /\/skill:livespec-orchestrator-beads-fabro-capture-work-item\b/);
+		assert.match(plaintextReason, /\/skill:livespec-impl-plaintext-capture-work-item\b/);
+		assert.equal(plaintextReason.includes("livespec-orchestrator-beads-fabro"), false);
+	});
+
+	it("cites the two surfaces that already go loud, rather than adding a third", () => {
+		// The armed status-vocabulary check and the orchestrator's untriaged lane
+		// both report a stranded item AFTER it is filed; this branch is the
+		// prevention, so the message points at them instead of restating them.
+		const blockReason = inProject(governedProject(), () => reason("bd create -t x"));
+		assert.match(blockReason, /Definition-of-Ready/);
+		assert.match(blockReason, /work_item_status_vocabulary/);
+		assert.match(blockReason, /untriaged_backlog_items/);
+	});
+
 	it("passes through in a project that is NOT livespec-governed", () => {
 		// The sibling Drivers' rule, unchanged: a project with no
 		// `implementation.plugin` has no capture-work-item operation to route to,
