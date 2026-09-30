@@ -33,7 +33,9 @@ import {
 	decide,
 	gitSubcommand,
 	isPrimaryCheckout,
+	runsRawBdCreate,
 	segments,
+	shellSplit,
 	stripLeadingNoise,
 	writeTargets,
 } from "../../extensions/livespec-footgun-guard.ts";
@@ -355,6 +357,30 @@ describe("raw `bd create` intake redirect", () => {
 			inProject(ungoverned, () => bash("bd create -t x")),
 			undefined,
 		);
+	});
+
+	it("words a line the way a shell does, or declines to word it at all", () => {
+		// The branch's whole no-false-positive story rests on this: a quoted run is
+		// ONE token, so no token's basename is `bd`. The file's own `tokenize()`
+		// cannot do that — it strips quotes at token EDGES after a whitespace split.
+		assert.deepEqual(shellSplit("bd -C /tmp create -t x"), ["bd", "-C", "/tmp", "create", "-t", "x"]);
+		assert.deepEqual(shellSplit("echo 'bd create -t x'"), ["echo", "bd create -t x"]);
+		assert.deepEqual(shellSplit('python3 -c "print(\'bd create\')"'), [
+			"python3",
+			"-c",
+			"print('bd create')",
+		]);
+		assert.equal(shellSplit("echo 'unterminated"), null);
+	});
+
+	it("identifies a create independently of the config gate", () => {
+		// `runsRawBdCreate` is the DETECTION half alone, so it answers the same way
+		// in any directory — which is what lets the corpora above attribute a
+		// pass-through to the detection declining rather than to the gate.
+		assert.equal(runsRawBdCreate("mise exec -- bd create -t x"), true);
+		assert.equal(runsRawBdCreate("bd -C /tmp create -t x"), true);
+		assert.equal(runsRawBdCreate("bd list && grep create f"), false);
+		assert.equal(runsRawBdCreate("bd list --status all\ngrep -rn create ."), false);
 	});
 
 	it("fails OPEN when resolving the project config itself fails", () => {
