@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.3](https://github.com/thewoolleyman/livespec-driver-pi/compare/v0.5.2...v0.5.3) (2026-09-30)
+
+
+### Bug Fixes
+
+* **dispatcher:** declare prepare_toolchain.mise so sandbox setup trusts .mise.toml (livespec-driver-pi-rmsqwd) ([ce71d0f](https://github.com/thewoolleyman/livespec-driver-pi/commit/ce71d0f7ed455c8167b25a96b9daaa27f0c4ed2d))
+
 ## [0.5.2](https://github.com/thewoolleyman/livespec-driver-pi/compare/v0.5.1...v0.5.2) (2026-09-10)
 
 
