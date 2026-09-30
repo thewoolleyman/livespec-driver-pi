@@ -278,6 +278,74 @@ describe("raw `bd create` intake redirect", () => {
 		assert.match(blockReason, /untriaged_backlog_items/);
 	});
 
+	// Ported from the Claude Driver's hook suite (item
+	// livespec-driver-claude-wgufs2) so the three Drivers agree on what a create
+	// IS. Every entry is INERT DATA handed to `decide`; nothing here runs `bd`,
+	// and nothing may be changed to do so.
+	const CREATES = [
+		"bd create",
+		"bd create -t 'PreToolUse guard on raw bd create'",
+		"bd create --type task --priority 1 -t x",
+		"mise exec -- bd create -t x",
+		"env -i bd create -t x",
+		"/usr/local/bin/bd create -t x",
+		"./bd create -t x",
+		"bd -C /data/projects/livespec-driver-pi create -t x",
+		"with-livespec-env.sh -- bd -C /data/projects/x create -t y",
+		"cd /tmp && bd create -t x",
+		"bd create -t 'title; with a semicolon'",
+		"timeout 30 bd create -t x",
+		"cd /tmp\nbd create -t x",
+		// A quoted title spanning line breaks: neither half tokenizes on its own,
+		// so the whole command is judged instead.
+		"bd create -t 'a title spanning\ntwo lines'",
+	];
+
+	const NOT_CREATES = [
+		"bd list --status all",
+		"bd -C /data/projects/livespec-driver-pi list --status all",
+		"bd show livespec-driver-pi-wgy4jc",
+		"bd update livespec-driver-pi-wgy4jc --status in_progress",
+		"bd close livespec-driver-pi-wgy4jc --reason done",
+		"echo 'bd create -t x'",
+		"grep -rn 'bd create' .",
+		"git commit -m 'route raw bd create to capture-work-item'",
+		"git log --grep='bd create'",
+		"python3 -c \"print('bd create')\"",
+		// The argument walk STOPS at the first token carrying shell control
+		// punctuation: that is where this command's argument run ends and the next
+		// command begins, so none of these three is a create.
+		"bd list && grep -rn create .",
+		"bd close x; echo create",
+		"bd list | grep create",
+		// A LATER LINE is a separate invocation, not more arguments to the `bd` on
+		// the first one — which is why the line split comes BEFORE tokenization.
+		"bd list --status all\ngrep -rn create .",
+		"bd -C /data/projects/x show wgy4jc\n\necho create",
+		"git status --short",
+		"echo 'unterminated",
+	];
+
+	it("blocks every spelling of a raw create, wrapper prefixes and global flags included", () => {
+		const project = governedProject();
+		inProject(project, () => {
+			for (const command of CREATES) {
+				assert.equal(bash(command)?.block, true, `reached the shell unredirected: ${command}`);
+			}
+		});
+	});
+
+	it("passes every non-create through unchanged, in the SAME governed project", () => {
+		// Same project as the block corpus above, so a pass here is the detection
+		// declining rather than the config gate declining.
+		const project = governedProject();
+		inProject(project, () => {
+			for (const command of NOT_CREATES) {
+				assert.equal(bash(command), undefined, `wrongly blocked: ${command}`);
+			}
+		});
+	});
+
 	it("passes through in a project that is NOT livespec-governed", () => {
 		// The sibling Drivers' rule, unchanged: a project with no
 		// `implementation.plugin` has no capture-work-item operation to route to,
