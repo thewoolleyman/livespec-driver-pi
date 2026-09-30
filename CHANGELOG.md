@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.6.0](https://github.com/thewoolleyman/livespec-driver-pi/compare/v0.5.3...v0.6.0) (2026-09-30)
+
+
+### Features
+
+* **footgun-guard:** block a raw bd create in a governed project (livespec-driver-pi-wgy4jc) ([50b9fe4](https://github.com/thewoolleyman/livespec-driver-pi/commit/50b9fe44ba75f824affaa604c0908dad21d6f989))
+* **footgun-guard:** fail the bd-create branch open on its own resolution failure (livespec-driver-pi-wgy4jc) ([5b038dd](https://github.com/thewoolleyman/livespec-driver-pi/commit/5b038dd844d439eb554485dc44087692c327cb1b))
+* **footgun-guard:** route the bd-create block to the configured capture-work-item (livespec-driver-pi-wgy4jc) ([dda4313](https://github.com/thewoolleyman/livespec-driver-pi/commit/dda4313831b7d2e9c0201ac55a8186043139c8e8))
+* **footgun-guard:** stop the bd-create walk at a command boundary (livespec-driver-pi-wgy4jc) ([f015e2d](https://github.com/thewoolleyman/livespec-driver-pi/commit/f015e2d0720783e1273e834de4fb21b55cb8253e))
+
 ## [0.5.3](https://github.com/thewoolleyman/livespec-driver-pi/compare/v0.5.2...v0.5.3) (2026-09-30)
 
 
