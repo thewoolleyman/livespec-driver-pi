@@ -209,6 +209,63 @@ describe("primary-checkout edit block", () => {
 	});
 });
 
+describe("raw `bd create` intake redirect", () => {
+	/** A livespec-governed project: a `.livespec.jsonc` declaring an impl plugin.
+	 * Commented, because the committed configs really are JSONC and a resolver
+	 * that only handles strict JSON would read every real one as ungoverned. */
+	function governedProject({ plugin = "livespec-orchestrator-beads-fabro" }: { plugin?: string } = {}): string {
+		const root = mkdtempSync(join(tmpdir(), "livespec-governed-"));
+		writeFileSync(
+			join(root, ".livespec.jsonc"),
+			[
+				"// Project-local livespec configuration (JSONC: comments are legal).",
+				"{",
+				'  "template": "livespec",',
+				`  "implementation": { "plugin": "${plugin}" }`,
+				"}",
+				"",
+			].join("\n"),
+			"utf8",
+		);
+		return root;
+	}
+
+	/** Run `body` with the process cwd at `root`.
+	 *
+	 * pi has no `CLAUDE_PROJECT_DIR` analogue — no `PI_PROJECT_DIR` exists and the
+	 * bash tool input carries no cwd — so the session cwd IS the project the guard
+	 * resolves the config from. Driving the real `process.cwd()` path is therefore
+	 * the only way to exercise what a live session exercises. */
+	function inProject<T>(root: string, body: () => T): T {
+		const previous = process.cwd();
+		process.chdir(root);
+		try {
+			return body();
+		} finally {
+			process.chdir(previous);
+		}
+	}
+
+	it("blocks a raw bd create inside a livespec-governed project", () => {
+		const project = governedProject();
+		assert.equal(
+			inProject(project, () => bash("bd create -t x")?.block),
+			true,
+		);
+	});
+
+	it("passes through in a project that is NOT livespec-governed", () => {
+		// The sibling Drivers' rule, unchanged: a project with no
+		// `implementation.plugin` has no capture-work-item operation to route to,
+		// so there is nothing to positively identify and the create is not ours.
+		const ungoverned = mkdtempSync(join(tmpdir(), "livespec-ungoverned-"));
+		assert.equal(
+			inProject(ungoverned, () => bash("bd create -t x")),
+			undefined,
+		);
+	});
+});
+
 describe("exported helpers (the parsing the four blocks all stand on)", () => {
 	it("splits on UNQUOTED separators only", () => {
 		assert.deepEqual(segments("a && b; c | d"), ["a", "b", "c", "d"]);

@@ -10,6 +10,10 @@
  *   (c) set `core.bare = true` on a checkout, or
  *   (d) edit files at a livespec PRIMARY checkout.
  *
+ * and — as a SECOND, separately-motivated branch of the same handler — routing a
+ * raw `bd create` to the active orchestrator plugin's capture-work-item
+ * operation (see §"Raw bd create" below).
+ *
  * It must be in place before any MUTATING operation (`seed`, `propose-change`,
  * `critique`, `revise`, `prune-history`) is exercised. The eight operation
  * bindings themselves stay SKILL.md skills — only the guard is an extension,
@@ -26,11 +30,33 @@
  *
  * The commit-refuse hook and branch protection are the real backstops; this
  * guard converts a silent footgun into an actionable, named block.
+ *
+ * §"Raw bd create" — WHY A FIFTH BRANCH LIVES IN THIS FILE. The intake redirect
+ * below is NOT a footgun predicate; it is the per-runtime sibling of the Claude
+ * Driver's `block_raw_bd_create.py` PreToolUse hook (landed 2026-09-09, item
+ * livespec-driver-claude-wgufs2) and of the Codex Driver's mirror of it, filed
+ * here as R7c under plan mechanically-enforce-factory-usage (epic bd-ib-btr5do,
+ * livespec-orchestrator-beads-fabro tenant). Those Drivers ship it as its OWN
+ * hook file. pi cannot: this package's contract is that the footgun guard is the
+ * ONLY first-party extension it ships, so pi's hooks all arrive through this one
+ * `tool_call` registration. The branch is therefore a TENANT of this file, not an
+ * extension of the footgun policy — its detection, its config gate, and its block
+ * message are entirely its own, and it is consulted only after all four footgun
+ * predicates have declined.
+ *
+ * A raw `bd create` files the work-item at the beads-native status `open`, which
+ * is OUTSIDE the runtime's livespec status vocabulary, so the item strands in
+ * backlog: it never runs the intake Definition-of-Ready gate and never reaches
+ * the factory. Two surfaces already go loud about the result — the armed
+ * `work_item_status_vocabulary` check and the orchestrator's
+ * `untriaged_backlog_items` needs-attention lane — but both report a stranded
+ * item AFTER it is filed. This branch is the prevention, so its block message
+ * CITES those two rather than adding a third loudness layer.
  */
 
 import { execFileSync } from "node:child_process";
-import { existsSync, statSync } from "node:fs";
-import { dirname, isAbsolute, resolve } from "node:path";
+import { existsSync, readFileSync, statSync } from "node:fs";
+import { dirname, isAbsolute, join, resolve } from "node:path";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
 const NO_VERIFY_REASON =
@@ -55,6 +81,12 @@ const PRIMARY_EDIT_REASON =
 	"Do edits in a SECONDARY worktree: `git -C <repo> worktree add " +
 	"~/.worktrees/<repo>/<branch> -b <branch> origin/master`, then PR, merge, " +
 	"cleanup.";
+
+const RAW_BD_CREATE_REASON =
+	"This project is livespec-governed. A raw `bd create` is NOT the intake path " +
+	"here: it files the work-item at the beads-native status `open`, OUTSIDE the " +
+	"runtime's livespec status vocabulary, so the item strands in backlog — it " +
+	"never runs the intake Definition-of-Ready gate and never reaches the factory.";
 
 /** Wrappers that merely re-exec another command, with the flags of THEIRS that
  * consume a following argument. Each is a bypass if treated as the invocation
@@ -81,6 +113,10 @@ const GIT_GLOBAL_OPTS_WITH_ARG = [
 	"--namespace",
 	"--exec-path",
 ];
+
+const BD_COMMAND = "bd";
+const CREATE_SUBCOMMAND = "create";
+const LIVESPEC_CONFIG = ".livespec.jsonc";
 
 const ENV_ASSIGN = /^[A-Za-z_][A-Za-z0-9_]*=/;
 const LEFTHOOK_OFF = /^LEFTHOOK=(?:0|false|off|no)$/i;
@@ -350,6 +386,181 @@ export function writeTargets(segment: string): string[] {
 	return targets.filter((target) => target.length > 0 && !target.startsWith("&"));
 }
 
+/** Split a LINE the way a POSIX shell words it, or null when it cannot be worded.
+ *
+ * This is the `shlex.split(line, posix=True)` the sibling Drivers' hook uses, and
+ * it is deliberately NOT the file's own `tokenize()`: that one strips quotes only
+ * at a token's EDGES after a whitespace split, so `echo 'bd create -t x'` would
+ * come back as five tokens, one of which is `bd`. Here a quoted run is ONE token
+ * whose value is the whole sentence, which is exactly what keeps an echo, a
+ * commit message, and a grep pattern from reading as an invocation.
+ *
+ * null means "unbalanced quotes" — a line that cannot be worded cannot be shown
+ * to be a create, which is the fail-open direction. */
+export function shellSplit(line: string): string[] | null {
+	const tokens: string[] = [];
+	let current: string | null = null;
+	let quote = "";
+	let index = 0;
+	while (index < line.length) {
+		const char = line[index];
+		if (quote) {
+			index += 1;
+			if (char === quote) {
+				quote = "";
+				continue;
+			}
+			if (quote === '"' && char === "\\" && index < line.length) {
+				current = (current ?? "") + line[index];
+				index += 1;
+				continue;
+			}
+			current = (current ?? "") + char;
+			continue;
+		}
+		if (char === "'" || char === '"') {
+			quote = char;
+			current = current ?? "";
+			index += 1;
+			continue;
+		}
+		if (char === "\\" && index + 1 < line.length) {
+			current = (current ?? "") + line[index + 1];
+			index += 2;
+			continue;
+		}
+		if (/\s/.test(char)) {
+			if (current !== null) {
+				tokens.push(current);
+				current = null;
+			}
+			index += 1;
+			continue;
+		}
+		current = (current ?? "") + char;
+		index += 1;
+	}
+	if (quote) {
+		return null;
+	}
+	if (current !== null) {
+		tokens.push(current);
+	}
+	return tokens;
+}
+
+/** True when this `bd` head's OWN argument run carries the `create` subcommand.
+ * Walking rather than matching position 1 is what lets beads' global flags sit in
+ * between — `bd -C <dir> create …` is the documented family spelling. */
+function reachesCreate(argumentRun: string[]): boolean {
+	return argumentRun.includes(CREATE_SUBCOMMAND);
+}
+
+/** True when `command` runs `bd create` at ANY of its token positions.
+ *
+ * Scanning every position, rather than consulting an allowlist of known
+ * wrappers, is what defeats a wrapper prefix: `mise exec -- bd create …`,
+ * `env -i bd create …`, and `with-livespec-env.sh -- bd … create …` all carry a
+ * `bd` token whose own argument run reaches `create`. */
+export function runsRawBdCreate(command: string): boolean {
+	const tokens = shellSplit(command);
+	if (tokens === null) {
+		return false;
+	}
+	return tokens.some(
+		(token, index) =>
+			(token.split("/").pop() ?? "") === BD_COMMAND && reachesCreate(tokens.slice(index + 1)),
+	);
+}
+
+/** String-aware removal of JSONC's two comment forms, line and block. The
+ * committed `.livespec.jsonc` configs really do carry both, so a strict-JSON
+ * reader would see every real governed project as ungoverned. */
+function stripJsoncComments(text: string): string {
+	const out: string[] = [];
+	let index = 0;
+	let inString = false;
+	while (index < text.length) {
+		const char = text[index];
+		if (inString) {
+			out.push(char);
+			if (char === "\\" && index + 1 < text.length) {
+				out.push(text[index + 1]);
+				index += 2;
+				continue;
+			}
+			if (char === '"') {
+				inString = false;
+			}
+			index += 1;
+			continue;
+		}
+		if (char === '"') {
+			inString = true;
+			out.push(char);
+			index += 1;
+			continue;
+		}
+		if (char === "/" && text[index + 1] === "/") {
+			while (index < text.length && text[index] !== "\n") {
+				index += 1;
+			}
+			continue;
+		}
+		if (char === "/" && text[index + 1] === "*") {
+			index += 2;
+			while (index + 1 < text.length && !(text[index] === "*" && text[index + 1] === "/")) {
+				index += 1;
+			}
+			index += 2;
+			continue;
+		}
+		out.push(char);
+		index += 1;
+	}
+	return out.join("");
+}
+
+function objectAt(value: unknown, key: string): Record<string, unknown> | null {
+	if (typeof value !== "object" || value === null) {
+		return null;
+	}
+	const nested = (value as Record<string, unknown>)[key];
+	return typeof nested === "object" && nested !== null ? (nested as Record<string, unknown>) : null;
+}
+
+/** The active orchestrator plugin `<project>/.livespec.jsonc` declares, else null.
+ *
+ * The namespace is a PROJECT FACT and is never hardcoded here: the block message
+ * has to name the operation THIS project's config routes intake to. A project
+ * that declares none is not identifiably governed, which is a pass-through. */
+function implPlugin(projectDir: string): string | null {
+	const configPath = join(projectDir, LIVESPEC_CONFIG);
+	if (!existsSync(configPath)) {
+		return null;
+	}
+	const config: unknown = JSON.parse(stripJsoncComments(readFileSync(configPath, "utf8")));
+	const plugin = objectAt(config, "implementation")?.plugin;
+	return typeof plugin === "string" && plugin.trim().length > 0 ? plugin.trim() : null;
+}
+
+/** The intake redirect, consulted only after the four footgun predicates decline.
+ *
+ * pi exposes no project-directory handle — there is no `PI_PROJECT_DIR` and the
+ * bash tool input carries no cwd — so the session cwd IS the governed project,
+ * which is also the directory the blocked command would have run in. The config
+ * read happens only AFTER a create is positively identified, so the ordinary
+ * bash call pays nothing. */
+function rawBdCreateDecision(command: string): GuardDecision {
+	if (!runsRawBdCreate(command)) {
+		return undefined;
+	}
+	if (implPlugin(process.cwd()) === null) {
+		return undefined;
+	}
+	return { block: true, reason: RAW_BD_CREATE_REASON };
+}
+
 function bashDecision(command: string): GuardDecision {
 	for (const segment of segments(command)) {
 		const { rest, lefthookDisabled } = stripLeadingNoise(tokenize(segment));
@@ -371,7 +582,10 @@ function bashDecision(command: string): GuardDecision {
 			}
 		}
 	}
-	return undefined;
+	// LAST, deliberately: the four footgun predicates the upstream contract owns
+	// decide first, and the intake redirect is a separate tenant of this handler
+	// rather than a fifth footgun rule.
+	return rawBdCreateDecision(command);
 }
 
 function pathDecision(path: unknown): GuardDecision {
