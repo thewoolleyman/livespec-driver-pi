@@ -570,16 +570,25 @@ function objectAt(value: unknown, key: string): Record<string, unknown> | null {
 /** The active orchestrator plugin `<project>/.livespec.jsonc` declares, else null.
  *
  * The namespace is a PROJECT FACT and is never hardcoded here: the block message
- * has to name the operation THIS project's config routes intake to. A project
- * that declares none is not identifiably governed, which is a pass-through. */
+ * has to name the operation THIS project's config routes intake to.
+ *
+ * Every failure is an ordinary "not identifiably governed" answer rather than a
+ * bug — an absent config, an unreadable one, a config path occupied by a
+ * directory, an unparseable one, one declaring no implementation plugin — so this
+ * carries its OWN catch rather than leaning on the registered handler's. That
+ * outer catch protects a live session; this one keeps the exported `decide` seam
+ * from throwing at any other caller, which under pi's fail-CLOSED default for a
+ * throwing handler is the difference between a pass-through and a wedged
+ * session. */
 function implPlugin(projectDir: string): string | null {
-	const configPath = join(projectDir, LIVESPEC_CONFIG);
-	if (!existsSync(configPath)) {
+	try {
+		const configText = readFileSync(join(projectDir, LIVESPEC_CONFIG), "utf8");
+		const config: unknown = JSON.parse(stripJsoncComments(configText));
+		const plugin = objectAt(config, "implementation")?.plugin;
+		return typeof plugin === "string" && plugin.trim().length > 0 ? plugin.trim() : null;
+	} catch {
 		return null;
 	}
-	const config: unknown = JSON.parse(stripJsoncComments(readFileSync(configPath, "utf8")));
-	const plugin = objectAt(config, "implementation")?.plugin;
-	return typeof plugin === "string" && plugin.trim().length > 0 ? plugin.trim() : null;
 }
 
 /** The intake-routing block message, naming the project's capture-work-item skill.

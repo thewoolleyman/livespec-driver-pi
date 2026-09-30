@@ -356,6 +356,33 @@ describe("raw `bd create` intake redirect", () => {
 			undefined,
 		);
 	});
+
+	it("fails OPEN when resolving the project config itself fails", () => {
+		// DEFENCE IN DEPTH, and the reason it is not redundant: the registered
+		// handler's outer catch protects a live pi session, but `decide` is also the
+		// exported seam this suite and any future caller drive directly. A branch
+		// that throws out of `decide` is one refactor away from being a wedged
+		// session, because pi blocks the tool when a `tool_call` handler throws.
+		//
+		// Both shapes below are real: a hand-broken config mid-edit, and the config
+		// path occupied by a directory.
+		const unparseable = mkdtempSync(join(tmpdir(), "livespec-unparseable-"));
+		writeFileSync(join(unparseable, ".livespec.jsonc"), '{ "implementation": ', "utf8");
+		const occupied = mkdtempSync(join(tmpdir(), "livespec-occupied-"));
+		mkdirSync(join(occupied, ".livespec.jsonc"));
+		// A THROW is the failure this pins, so it is reported as a value rather than
+		// escaping the test: "undefined, and not a throw" is the whole contract.
+		function outcome(project: string): ReturnType<typeof decide> | string {
+			try {
+				return inProject(project, () => decide("bash", { command: "bd create -t x" }));
+			} catch (error) {
+				return `threw ${String(error)}`;
+			}
+		}
+		for (const project of [unparseable, occupied]) {
+			assert.equal(outcome(project), undefined, `did not fail open at ${project}`);
+		}
+	});
 });
 
 describe("exported helpers (the parsing the four blocks all stand on)", () => {
