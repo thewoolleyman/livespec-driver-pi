@@ -132,6 +132,8 @@ markers = [
 # from `resolve_check_universe()`, so an empty value makes them STRICTER
 # rather than blinder.
 [tool.livespec_dev_tooling]
+# This guard controls local/factory authorship and explicitly skips GitHub Actions.
+repo_local_ci_skips = [{ slug = "check-no-workflow-edits", reason = "Local and janitor authorship control; its canonical body explicitly skips GitHub Actions, where fleet bot workflow updates are legitimate." }]
 # ARMED, matching both sibling Drivers. The earlier note here left it false on
 # the reasoning that "with no first-party product `.py` in the universe the flag
 # would be a claim about a set that does not exist". The universe is indeed

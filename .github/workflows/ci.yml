@@ -442,6 +442,7 @@ jobs:
           just check-no-write-direct || failed="$failed check-no-write-direct"
           just check-pbt-coverage-pure-modules || failed="$failed check-pbt-coverage-pure-modules"
           just check-pi-package-structure || failed="$failed check-pi-package-structure"
+          just check-pi-drive-output || failed="$failed check-pi-drive-output"
           just check-private-calls || failed="$failed check-private-calls"
           just check-public-api-result-typed || failed="$failed check-public-api-result-typed"
           just check-rop-pipeline-shape || failed="$failed check-rop-pipeline-shape"
