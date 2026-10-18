@@ -273,6 +273,9 @@ resolve, which `check-agents-ai-references-resolve` enforces).
 - Read `.ai/pi-runtime.md` before authoring a SKILL.md binding or driving
   the `pi` CLI unattended — the fatal unquoted `: ` in frontmatter, and
   `pi -p` exiting 0 on a failed model call.
+- Read `.ai/plan-archive-reviewer.md` BEFORE commissioning the plan
+  archive's independent completeness reviewer — a reviewer spawned with a
+  `name` never returns its verdict, and the gate forbids synthesizing one.
 
 ## Decision authority — when to ask, proceed, or self-resolve
 
