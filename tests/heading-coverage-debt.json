@@ -2,6 +2,13 @@
   {
     "spec_root": "SPECIFICATION",
     "spec_file": "constraints.md",
+    "heading": "## Factory routing",
+    "work_item": "bd-ib-fyozyd",
+    "first_seen": "2026-10-20"
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "constraints.md",
     "heading": "## Inherited from livespec",
     "work_item": "livespec-driver-pi-43a",
     "first_seen": "2026-08-15"

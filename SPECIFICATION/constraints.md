@@ -79,6 +79,18 @@ the upstream constraint wins.
   nothing — which is the entire reason this repo-local analogue exists. A check
   that cannot fail on this repo's layout is not a gate.
 
+## Factory routing
+
+Every entry this repository commits in `.livespec.jsonc` under
+`dispatcher.factories` MUST be registry-backed: it declares `"registry": true`
+and carries no `server` and no `docker_host` value, so no committed factory
+entry names a machine. Which Fabro server answers to a factory name is bound
+only in the fleet gitops inventory's factory registry (the Fabro factory
+registry section of `livespec-dev-tooling/SPECIFICATION/non-functional-requirements.md`),
+which each dispatching host renders as `/etc/livespec/fabro-factories.json`; a
+dispatch resolves a registry-backed entry from that file by name.
+`dispatcher.default_factory` MUST name `legacy`.
+
 ## Forbidden patterns
 
 - `uv run`, a literal `.claude-plugin/scripts` path, or this Driver's own
