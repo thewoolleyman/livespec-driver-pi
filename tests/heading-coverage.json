@@ -130,6 +130,14 @@
   {
     "spec_root": "SPECIFICATION",
     "spec_file": "constraints.md",
+    "heading": "## Factory routing",
+    "test": "TODO",
+    "work_item": "bd-ib-fyozyd",
+    "reason": "An integration-tier test is owed and will land with the registry-switch work-item filed in this tenant under plan petri-factory-on-gmktec (epic bd-ib-fyozyd); until then its host-captured proof is a dispatch from the control node that resolves legacy through /etc/livespec/fabro-factories.json."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "constraints.md",
     "heading": "## Forbidden patterns",
     "test": "tests.dev-tooling.test_check_pi_package_structure.test_inline_resolution_without_the_shared_resolver_is_reported",
     "work_item": "livespec-driver-pi-43a",
