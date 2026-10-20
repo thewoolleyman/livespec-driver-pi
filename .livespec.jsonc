@@ -285,13 +285,23 @@
       "auto_approve_ready": true,
       "acceptance_mode": "ai-only",
       "wip_cap": 10,
-      "default_factory": "hp",
+      // Registry-backed factory table, per this repository's own
+      // `SPECIFICATION/constraints.md` §"Factory routing" (spec version v002):
+      // every committed entry declares `"registry": true` and carries NO
+      // `server` and NO `docker_host`, so no committed entry names a machine. A
+      // factory is bound to a machine ONLY in the fleet gitops inventory's
+      // factory registry, which each dispatching host renders as
+      // `/etc/livespec/fabro-factories.json`; a dispatch resolves `legacy` from
+      // that file by name. Adding a hostname back here is a spec violation, not
+      // a convenience — route the binding through the inventory instead.
+      // `legacy` replaces the former hostname-bearing `hp` and `vps` entries and
+      // the registry maps it at the same instance, so routing is unchanged; a
+      // recorded item pin naming `hp`, `vps` or `default` falls back to
+      // `default_factory` under the ratified recorded-pin fallback.
+      "default_factory": "legacy",
       "factories": {
-        "hp": {
-          "server": "https://hp-xubuntu.perch-rudd.ts.net:32276"
-        },
-        "vps": {
-          "server": "https://vps.perch-rudd.ts.net:32276"
+        "legacy": {
+          "registry": true
         }
       }
     }
