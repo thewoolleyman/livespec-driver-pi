@@ -133,7 +133,7 @@
     "heading": "## Factory routing",
     "test": "TODO",
     "work_item": "bd-ib-fyozyd",
-    "reason": "An integration-tier test is owed and will land with the registry-switch work-item filed in this tenant under plan petri-factory-on-gmktec (epic bd-ib-fyozyd); until then its host-captured proof is a dispatch from the control node that resolves legacy through /etc/livespec/fabro-factories.json."
+    "reason": "An integration-tier test is owed and will land with the registry-switch work-item filed in this tenant under plan petri-factory-on-gmktec (epic bd-ib-fyozyd); until then its host-captured proof is a dispatch from the control node that resolves the default factory (petri since the R668 cutover) through /etc/livespec/fabro-factories.json."
   },
   {
     "spec_root": "SPECIFICATION",
