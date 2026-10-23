@@ -242,7 +242,7 @@ state), the `file_lloc_hard_gate` and `.claude/settings.json`
 dev-time-hooks decisions (`-zazr4d`), the adopter `.pi/settings.json`
 audit (`-no6in2`), the prompt-template adopt-or-re-defer decision
 (`-jyuvlv`), and the three upstream-prevention routings (`-65yari`,
-`-ybsp4p`, `-nwsjym`) whose downstream items are named above.
+`-ybsp4p`, `-nwsjym`) whose still-open downstream items are named above.
 
 **Deliberately not wired, and not an oversight:** the CLI-end-to-end
 harness. A gate is wired by the pass that creates what it guards — one
