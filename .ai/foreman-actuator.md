@@ -68,3 +68,38 @@ beside the fields above:
 - `work_item_comment: {work_item_id, text}`
 - `work_item_file: {filing: {target_repo, title, description, type,
   depends_on, checklist{the six gates}, …}}`
+
+## gather, compose and act run in ONE credential-wrapper invocation
+
+Two facts that only make sense together.
+
+**The wrapper is not optional, and it scrubs `PATH`.** The ledger
+subprocess shells a bare `bd` with `cwd=<repo>`, so the tenant
+credentials have to be present — see `.ai/beads-tenant.md` for that
+tenant's own hazards. But `with-livespec-env.sh` **scrubs `PATH`**, and
+the scrubbed `PATH` loses `uv`, which the plugin bin shebangs need. The
+working form re-exports the caller's `PATH` across the wrapper:
+
+```bash
+/usr/local/bin/with-livespec-env.sh -- env PATH="$PATH" <command>
+```
+
+**And the three stages must share that one invocation.** The daemon's
+snapshot generation advances every few seconds, while the wrapper's
+credstore hop is slow enough to lose that race. So gather, compose and
+act run inside one credential-wrapper invocation:
+
+```bash
+/usr/local/bin/with-livespec-env.sh -- env PATH="$PATH" sh -c '
+  foreman-gather > /tmp/gather.json
+  compose-proposal /tmp/gather.json > /tmp/proposal.json
+  foreman-act --proposal /tmp/proposal.json
+'
+```
+
+Split them across separate wrapper invocations and the snapshot composed
+from the first gather is already stale by the time `act` validates it:
+the actuator refuses with **`tick_generation_changed`**. That refusal is
+not about a wrong value — re-gathering and retrying by hand loses the
+same race again, which is how it consumes several attempts before the
+shape becomes visible.

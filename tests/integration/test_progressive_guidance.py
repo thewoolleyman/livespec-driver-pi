@@ -85,3 +85,34 @@ def test_actuator_guidance_lists_the_envelope_required_fields() -> None:
     assert "session_identity_changed" in text, (
         "the refusal a top-level session_identity produces is not named"
     )
+
+
+def test_actuator_guidance_requires_one_credential_wrapper_invocation() -> None:
+    """`.ai/foreman-actuator.md`: gather, compose and act in ONE wrapper call.
+
+    Two facts that only make sense together. The ledger subprocess shells a
+    bare `bd` with `cwd=repo`, so the credential wrapper is not optional; but
+    the wrapper SCRUBS `PATH` and so loses `uv`, which the plugin bin shebangs
+    need — hence the `env PATH="$PATH"` re-export. And because the daemon's
+    snapshot generation advances every few seconds while the wrapper's
+    credstore hop is slow, splitting gather, compose and act across separate
+    wrapper invocations loses the race and the actuator refuses with
+    `tick_generation_changed`. Control-armed: dropping the wrapper form, the
+    PATH-scrub reason, the single-invocation requirement, or the refusal it
+    avoids fails.
+    """
+    text = _actuator_guidance_text()
+    lowered = text.casefold()
+    assert '/usr/local/bin/with-livespec-env.sh -- env PATH="$PATH"' in text, (
+        "the working wrapper form is not given verbatim"
+    )
+    assert "PATH" in text and "scrub" in lowered, "the PATH scrub is not named as the reason"
+    assert "uv" in text, "the tool the PATH scrub loses is not named"
+    assert "tick_generation_changed" in text, (
+        "the refusal a split invocation produces is not named"
+    )
+    for stage in ("gather", "compose", "act"):
+        assert stage in lowered, f"the {stage} stage is not named"
+    assert "one credential-wrapper invocation" in lowered, (
+        "that the three stages run inside ONE credential-wrapper invocation is not stated"
+    )
