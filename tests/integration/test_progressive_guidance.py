@@ -50,3 +50,38 @@ def test_actuator_guidance_states_proposal_takes_a_file_path() -> None:
     assert "file path" in lowered, "the file-path requirement is not stated"
     assert "inline json" in lowered, "the inline-JSON mistake is not named"
     assert "FileNotFoundError" in text, "the error inline JSON actually raises is not named"
+
+
+def test_actuator_guidance_lists_the_envelope_required_fields() -> None:
+    """`.ai/foreman-actuator.md`: the envelope's required fields and the snapshot.
+
+    The envelope is refused field-by-field, so a caller that does not know the
+    whole required set pays one refusal per missing field. The three snapshot
+    fields are revalidated against a FRESH gather document, and a
+    `session_identity` placed at the TOP LEVEL rather than inside `snapshot` is
+    silently ignored — which surfaces as `session_identity_changed`, a
+    diagnostic that reads as a stale value rather than as a misplaced key.
+    Control-armed: dropping any required field, the snapshot triple, or the
+    ignored-top-level fact fails.
+    """
+    text = _actuator_guidance_text()
+    for field in (
+        "schema_version",
+        "action_id",
+        "repo",
+        "topic",
+        "session_name",
+        "snapshot",
+        "tick_generation",
+        "daemon_instance_id",
+        "session_identity",
+    ):
+        assert field in text, f"the envelope field {field} is not named"
+    lowered = text.casefold()
+    assert "top level" in lowered or "top-level" in lowered, (
+        "the misplaced top-level session_identity is not described"
+    )
+    assert "ignored" in lowered, "that a top-level session_identity is IGNORED is not stated"
+    assert "session_identity_changed" in text, (
+        "the refusal a top-level session_identity produces is not named"
+    )
