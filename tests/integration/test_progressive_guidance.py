@@ -186,3 +186,22 @@ def test_progressive_guidance_routes_to_the_actuator_file_and_resolves(
     )
     monkeypatch.chdir(_REPO_ROOT)
     assert ai_references_main() == 0, "check-agents-ai-references-resolve does not pass"
+
+
+def test_upstream_prevention_routings_clause_is_qualified_to_still_open_items() -> None:
+    """AGENTS.md: the upstream-prevention routings name their STILL-OPEN children.
+
+    The three closed routings (`-65yari`, `-ybsp4p`, `-nwsjym`) are listed as
+    closed, and the clause claimed their downstream items are "named above".
+    That reads as a claim about ALL of them, and it is not one: `bhu4z6` occurs
+    ZERO times in the file (re-measured on this tree). Nothing open is
+    concealed — that item is closed — so the sentence simply wants qualifying.
+    Control-armed: the bare, unqualified clause fails.
+    """
+    text = _AGENTS_MD.read_text(encoding="utf-8")
+    assert "whose still-open downstream items are named above" in text, (
+        "the upstream-prevention routings clause is not qualified to still-open items"
+    )
+    assert "whose downstream items are named above" not in text, (
+        "the unqualified claim that ALL downstream items are named above still stands"
+    )
