@@ -17,7 +17,6 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-
 from livespec_dev_tooling.checks.agents_ai_references_resolve import main as ai_references_main
 
 __all__: list[str] = []
@@ -38,9 +37,9 @@ def _progressive_guidance_section() -> str:
     state `check-agents-ai-references-resolve` reports as vacuous.
     """
     text = _AGENTS_MD.read_text(encoding="utf-8")
-    assert _PROGRESSIVE_GUIDANCE_HEADING in text, (
-        f"AGENTS.md carries no {_PROGRESSIVE_GUIDANCE_HEADING!r} section"
-    )
+    assert (
+        _PROGRESSIVE_GUIDANCE_HEADING in text
+    ), f"AGENTS.md carries no {_PROGRESSIVE_GUIDANCE_HEADING!r} section"
     after = text.split(_PROGRESSIVE_GUIDANCE_HEADING, 1)[1]
     return after.split("\n## ", 1)[0]
 
@@ -101,13 +100,13 @@ def test_actuator_guidance_lists_the_envelope_required_fields() -> None:
     ):
         assert field in text, f"the envelope field {field} is not named"
     lowered = text.casefold()
-    assert "top level" in lowered or "top-level" in lowered, (
-        "the misplaced top-level session_identity is not described"
-    )
+    assert (
+        "top level" in lowered or "top-level" in lowered
+    ), "the misplaced top-level session_identity is not described"
     assert "ignored" in lowered, "that a top-level session_identity is IGNORED is not stated"
-    assert "session_identity_changed" in text, (
-        "the refusal a top-level session_identity produces is not named"
-    )
+    assert (
+        "session_identity_changed" in text
+    ), "the refusal a top-level session_identity produces is not named"
 
 
 def test_actuator_guidance_requires_one_credential_wrapper_invocation() -> None:
@@ -126,19 +125,18 @@ def test_actuator_guidance_requires_one_credential_wrapper_invocation() -> None:
     """
     text = _actuator_guidance_text()
     lowered = text.casefold()
-    assert '/usr/local/bin/with-livespec-env.sh -- env PATH="$PATH"' in text, (
-        "the working wrapper form is not given verbatim"
-    )
-    assert "PATH" in text and "scrub" in lowered, "the PATH scrub is not named as the reason"
+    assert (
+        '/usr/local/bin/with-livespec-env.sh -- env PATH="$PATH"' in text
+    ), "the working wrapper form is not given verbatim"
+    assert "PATH" in text, "the variable the wrapper scrubs is not named"
+    assert "scrub" in lowered, "the PATH scrub is not named as the reason for the re-export"
     assert "uv" in text, "the tool the PATH scrub loses is not named"
-    assert "tick_generation_changed" in text, (
-        "the refusal a split invocation produces is not named"
-    )
+    assert "tick_generation_changed" in text, "the refusal a split invocation produces is not named"
     for stage in ("gather", "compose", "act"):
         assert stage in lowered, f"the {stage} stage is not named"
-    assert "one credential-wrapper invocation" in lowered, (
-        "that the three stages run inside ONE credential-wrapper invocation is not stated"
-    )
+    assert (
+        "one credential-wrapper invocation" in lowered
+    ), "that the three stages run inside ONE credential-wrapper invocation is not stated"
 
 
 def test_actuator_guidance_names_the_dispatch_journal_as_the_audit_trail() -> None:
@@ -156,9 +154,9 @@ def test_actuator_guidance_names_the_dispatch_journal_as_the_audit_trail() -> No
     assert "tmp/fabro-dispatch-journal.jsonl" in text, "the journal path is not named"
     assert '"stage": "foreman-act"' in text, "the journal stage is not named as a record field"
     assert "audit trail" in lowered, "the journal is not identified as the audit trail"
-    assert "refused or acted" in lowered, (
-        "that EVERY attempt is journaled, refused or acted, is not stated"
-    )
+    assert (
+        "refused or acted" in lowered
+    ), "that EVERY attempt is journaled, refused or acted, is not stated"
 
 
 def test_progressive_guidance_routes_to_the_actuator_file_and_resolves(
@@ -175,15 +173,13 @@ def test_progressive_guidance_routes_to_the_actuator_file_and_resolves(
     so no instrumented child is spawned (`check-tests-no-subprocess-spawn`).
     """
     section = _progressive_guidance_section()
-    assert ".ai/foreman-actuator.md" in section, (
-        'AGENTS.md "Progressive guidance" does not reference .ai/foreman-actuator.md'
-    )
-    bullet = next(
-        line for line in section.splitlines() if ".ai/foreman-actuator.md" in line
-    )
-    assert bullet.lstrip().startswith("- Read "), (
-        f"the reference carries no read-before condition in the sibling bullets' style: {bullet!r}"
-    )
+    assert (
+        ".ai/foreman-actuator.md" in section
+    ), 'AGENTS.md "Progressive guidance" does not reference .ai/foreman-actuator.md'
+    bullet = next(line for line in section.splitlines() if ".ai/foreman-actuator.md" in line)
+    assert bullet.lstrip().startswith(
+        "- Read "
+    ), f"the reference carries no read-before condition in the sibling bullets' style: {bullet!r}"
     monkeypatch.chdir(_REPO_ROOT)
     assert ai_references_main() == 0, "check-agents-ai-references-resolve does not pass"
 
@@ -199,9 +195,9 @@ def test_upstream_prevention_routings_clause_is_qualified_to_still_open_items() 
     Control-armed: the bare, unqualified clause fails.
     """
     text = _AGENTS_MD.read_text(encoding="utf-8")
-    assert "whose still-open downstream items are named above" in text, (
-        "the upstream-prevention routings clause is not qualified to still-open items"
-    )
-    assert "whose downstream items are named above" not in text, (
-        "the unqualified claim that ALL downstream items are named above still stands"
-    )
+    assert (
+        "whose still-open downstream items are named above" in text
+    ), "the upstream-prevention routings clause is not qualified to still-open items"
+    assert (
+        "whose downstream items are named above" not in text
+    ), "the unqualified claim that ALL downstream items are named above still stands"
