@@ -87,15 +87,24 @@ working form re-exports the caller's `PATH` across the wrapper:
 **And the three stages must share that one invocation.** The daemon's
 snapshot generation advances every few seconds, while the wrapper's
 credstore hop is slow enough to lose that race. So gather, compose and
-act run inside one credential-wrapper invocation:
+act run inside one credential-wrapper invocation — one wrapper call, all
+three stages inside it:
 
 ```bash
 /usr/local/bin/with-livespec-env.sh -- env PATH="$PATH" sh -c '
-  foreman-gather > /tmp/gather.json
-  compose-proposal /tmp/gather.json > /tmp/proposal.json
-  foreman-act --proposal /tmp/proposal.json
+  <gather command> > /tmp/gather.json          # 1. gather
+  <compose the envelope from /tmp/gather.json> # 2. compose
+  foreman-act --proposal /tmp/proposal.json    # 3. act
 '
 ```
+
+The gather and compose steps are deliberately left as PLACEHOLDERS: the
+gather command and the envelope composition are plugin-owned surface
+whose spelling this file does not pin (see the scope fence above), and a
+command name invented here is exactly the kind of wrong fact that costs
+the next session a cycle. What is measured, and what this section
+commits to, is the SHAPE: one wrapper call, with all three stages inside
+it.
 
 Split them across separate wrapper invocations and the snapshot composed
 from the first gather is already stale by the time `act` validates it:
