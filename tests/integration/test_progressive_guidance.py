@@ -16,10 +16,33 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
+from livespec_dev_tooling.checks.agents_ai_references_resolve import main as ai_references_main
+
 __all__: list[str] = []
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
+_AGENTS_MD = _REPO_ROOT / "AGENTS.md"
 _ACTUATOR_GUIDANCE = _REPO_ROOT / ".ai" / "foreman-actuator.md"
+_PROGRESSIVE_GUIDANCE_HEADING = "## Progressive guidance"
+
+
+def _progressive_guidance_section() -> str:
+    """The body of `AGENTS.md` section "Progressive guidance", heading excluded.
+
+    Sliced to the section rather than searched whole, because the assertion
+    under grade is that the reference lives in the section that ROUTES to it: a
+    `.ai/foreman-actuator.md` mention anywhere else in `AGENTS.md` would pass a
+    whole-file search while leaving the file unrouted, which is precisely the
+    state `check-agents-ai-references-resolve` reports as vacuous.
+    """
+    text = _AGENTS_MD.read_text(encoding="utf-8")
+    assert _PROGRESSIVE_GUIDANCE_HEADING in text, (
+        f"AGENTS.md carries no {_PROGRESSIVE_GUIDANCE_HEADING!r} section"
+    )
+    after = text.split(_PROGRESSIVE_GUIDANCE_HEADING, 1)[1]
+    return after.split("\n## ", 1)[0]
 
 
 def _actuator_guidance_text() -> str:
@@ -136,3 +159,30 @@ def test_actuator_guidance_names_the_dispatch_journal_as_the_audit_trail() -> No
     assert "refused or acted" in lowered, (
         "that EVERY attempt is journaled, refused or acted, is not stated"
     )
+
+
+def test_progressive_guidance_routes_to_the_actuator_file_and_resolves(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """AGENTS.md "Progressive guidance" routes to the actuator file, non-dangling.
+
+    Two halves of one assertion. The REFERENCE must sit in the section that
+    routes a session to the file, carrying a read-before condition in the style
+    of the `beads-tenant.md` and `pi-runtime.md` bullets beside it; and
+    `check-agents-ai-references-resolve` must still exit 0 over the whole tree,
+    which is what proves the new reference is not dangling. The check runs
+    in-process against the repository root — its `main()` reads `Path.cwd()` —
+    so no instrumented child is spawned (`check-tests-no-subprocess-spawn`).
+    """
+    section = _progressive_guidance_section()
+    assert ".ai/foreman-actuator.md" in section, (
+        'AGENTS.md "Progressive guidance" does not reference .ai/foreman-actuator.md'
+    )
+    bullet = next(
+        line for line in section.splitlines() if ".ai/foreman-actuator.md" in line
+    )
+    assert bullet.lstrip().startswith("- Read "), (
+        f"the reference carries no read-before condition in the sibling bullets' style: {bullet!r}"
+    )
+    monkeypatch.chdir(_REPO_ROOT)
+    assert ai_references_main() == 0, "check-agents-ai-references-resolve does not pass"
