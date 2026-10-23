@@ -116,3 +116,23 @@ def test_actuator_guidance_requires_one_credential_wrapper_invocation() -> None:
     assert "one credential-wrapper invocation" in lowered, (
         "that the three stages run inside ONE credential-wrapper invocation is not stated"
     )
+
+
+def test_actuator_guidance_names_the_dispatch_journal_as_the_audit_trail() -> None:
+    """`.ai/foreman-actuator.md`: the journal path, its stage, and what it holds.
+
+    Every actuator attempt is journaled whether it was refused or acted, under
+    `stage: foreman-act`, so the journal — not the ledger and not the terminal
+    scrollback — is the audit trail, and reading its tail is the fastest way to
+    see what a prior session actually tried. Control-armed: naming the path
+    without the stage, or without saying it records refused attempts too,
+    fails.
+    """
+    text = _actuator_guidance_text()
+    lowered = text.casefold()
+    assert "tmp/fabro-dispatch-journal.jsonl" in text, "the journal path is not named"
+    assert '"stage": "foreman-act"' in text, "the journal stage is not named as a record field"
+    assert "audit trail" in lowered, "the journal is not identified as the audit trail"
+    assert "refused or acted" in lowered, (
+        "that EVERY attempt is journaled, refused or acted, is not stated"
+    )
