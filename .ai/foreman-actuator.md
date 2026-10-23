@@ -28,3 +28,43 @@ say so. The argument is opened through `pathlib`, so inline JSON raises a
 missing file rather than as a wrong argument shape, and the natural next
 move (checking whether some file is missing) leads away from the actual
 defect.
+
+## The envelope's required fields
+
+The envelope is validated field-by-field, so a caller who does not know
+the whole required set pays one refusal per missing field. All of these
+are REQUIRED:
+
+```jsonc
+{
+  "schema_version": 1,
+  "action_id": "<unique id for this action>",
+  "repo": "livespec-driver-pi",
+  "topic": "<plan topic>",
+  "session_name": "<the seat's session name>",
+  "snapshot": {
+    "tick_generation": "<from a fresh gather>",
+    "daemon_instance_id": "<from a fresh gather>",
+    "session_identity": "<from a fresh gather>"
+  }
+}
+```
+
+All THREE snapshot fields are revalidated against a FRESH gather
+document — see the next section for why that is a race and not merely a
+copy.
+
+**`session_identity` belongs INSIDE `snapshot`.** A `session_identity`
+placed at the TOP LEVEL of the envelope is silently **ignored**: the
+actuator finds no identity in the snapshot it validates and refuses with
+`session_identity_changed`. That diagnostic reads as a STALE value, so
+the obvious response is to re-gather and retry — which cannot work,
+because nothing about the value was wrong. The key was in the wrong
+place.
+
+The ACTION PAYLOAD then sits under a key named for the action itself,
+beside the fields above:
+
+- `work_item_comment: {work_item_id, text}`
+- `work_item_file: {filing: {target_repo, title, description, type,
+  depends_on, checklist{the six gates}, …}}`
