@@ -276,6 +276,12 @@ resolve, which `check-agents-ai-references-resolve` enforces).
 - Read `.ai/plan-archive-reviewer.md` BEFORE commissioning the plan
   archive's independent completeness reviewer — a reviewer spawned with a
   `name` never returns its verdict, and the gate forbids synthesizing one.
+- Read `.ai/foreman-actuator.md` before driving `foreman-act` against
+  this repo — the `--proposal` file-path argument, the envelope's
+  required fields and its snapshot triple, the single
+  credential-wrapper invocation that `PATH`-scrub and the
+  `tick_generation_changed` race both demand, and the dispatch journal
+  that is the audit trail of every attempt.
 
 ## Decision authority — when to ask, proceed, or self-resolve
 
