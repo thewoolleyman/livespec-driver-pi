@@ -103,3 +103,20 @@ the actuator refuses with **`tick_generation_changed`**. That refusal is
 not about a wrong value — re-gathering and retrying by hand loses the
 same race again, which is how it consumes several attempts before the
 shape becomes visible.
+
+## The journal is the audit trail
+
+Every actuator attempt — refused or acted, without exception — is
+journaled to `tmp/fabro-dispatch-journal.jsonl` under
+`"stage": "foreman-act"`. That file, not the ledger and not a terminal
+scrollback, is the **audit trail** of what the seat actually tried, and
+reading its tail is the fastest way to see what a prior session did
+before guessing:
+
+```bash
+grep '"stage": "foreman-act"' tmp/fabro-dispatch-journal.jsonl | tail
+```
+
+A refusal that left no mark on the ledger still left one here, which is
+why this is the first place to look when the ledger and the seat's own
+account of a tick disagree.
