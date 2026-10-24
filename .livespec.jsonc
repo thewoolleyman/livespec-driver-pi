@@ -296,8 +296,8 @@
       // bd-ib-iud52v), from that file by name. Adding a hostname back here is a spec violation, not
       // a convenience — route the binding through the inventory instead.
       // `legacy` replaced the former hostname-bearing `hp` and `vps` entries
-      // and stays declared, registry-backed, after the cutover; a
-      // recorded item pin naming `hp`, `vps` or `default` falls back to
+      // and was itself retired and removed on 2026-10-24 (plan fabro-currency); a
+      // recorded item pin naming `legacy`, `hp`, `vps` or `default` falls back to
       // `default_factory` under the ratified recorded-pin fallback.
       "default_factory": "petri",
       "factories": {
@@ -311,12 +311,6 @@
           // SPECIFICATION, "Factory sandbox environment naming"). Its provider, not
           // this id, says where the sandbox runs, so a provider move changes nothing here.
           "environment": "factory-python"
-        },
-        // legacy submits through the pinned 0.254 8869e88 client whose bytes match hp's
-        // declared engine, staged by the livespec-dev-tooling dev-host play (bd-ib-zb2hso).
-        "legacy": {
-          "registry": true,
-          "bin": "/home/ubuntu/.local/state/fabro-currency/carrier-legacy-v0.254-8869e88/fabro"
         }
       }
     }
