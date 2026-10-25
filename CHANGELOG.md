@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.1](https://github.com/thewoolleyman/livespec-driver-pi/compare/v0.6.0...v0.6.1) (2026-10-25)
+
+
+### Bug Fixes
+
+* **config:** declare claude-sonnet-5-5 in the model catalog for the Codex-first fallbacks ([7f89b2c](https://github.com/thewoolleyman/livespec-driver-pi/commit/7f89b2ce395679c478f33d59015e77a7cdaacf88))
+
 ## [0.6.0](https://github.com/thewoolleyman/livespec-driver-pi/compare/v0.5.3...v0.6.0) (2026-09-30)
 
 
