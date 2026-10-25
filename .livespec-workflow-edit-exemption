@@ -1,2 +1,2 @@
-work_item=livespec-driver-pi-kgwqcn
-reason=Add the existing credential-free pi-drive-output gate to the required CI batch; preserve all workflow triggers, credentials and runner routing.
+work_item=livespec-driver-pi-abwvp6
+reason=Add a top-level concurrency group to release-please.yml so concurrent master pushes queue instead of racing on a stale release base (2026-10-25 PRs 3619/3620).
