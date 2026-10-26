@@ -30,6 +30,13 @@
   {
     "spec_root": "SPECIFICATION",
     "spec_file": "scenarios.md",
+    "heading": "## Scenario: a delegating host's push gates on the remote executor and refuses on no verdict",
+    "work_item": "livespec-driver-pi-hpytnq",
+    "first_seen": "2026-10-26"
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "scenarios.md",
     "heading": "## Scenario: an untrusted non-interactive invocation resolves nothing",
     "work_item": "livespec-driver-pi-43a",
     "first_seen": "2026-08-15"

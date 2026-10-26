@@ -93,8 +93,10 @@
   "external_references": {
     "livespec": [
       "SPECIFICATION/contracts.md §\"Plugin distribution\"",
-      "SPECIFICATION/contracts.md §\"Driver-shipped hooks\""
-    ]
+      "SPECIFICATION/contracts.md §\"Driver-shipped hooks\"",
+      "§\"Enforcement-suite invocation\""
+    ],
+    "livespec-dev-tooling": ["§\"Delegated pre-push gate\""]
   },
   // Planning/work-item-resolution registry. These targets are the repo slugs
   // accepted by cross-tenant DependsOnEntry refs (`sibling_work_item`,
