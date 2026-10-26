@@ -342,5 +342,13 @@
     "test": "tests.extensions.livespec_footgun_guard",
     "work_item": "livespec-driver-pi-43a",
     "reason": "Integration-tier (TS guard suite run by check-extension-quality via `node --test`, driving the guard's exported decide()): blocks a write/redirection into a repo that declares itself the livespec primary checkout — the Driver-side guard realizing the primary-checkout commit-refuse discipline; the core commit-refuse hook is the attended backstop."
+  },
+  {
+    "spec_root": "SPECIFICATION",
+    "spec_file": "scenarios.md",
+    "heading": "## Scenario: a delegating host's push gates on the remote executor and refuses on no verdict",
+    "test": "TODO",
+    "reason": "A real test at the integration tier or above is owed for this heading: a delegating host's pre-push runs the delegation client in place of just check and refuses on no verdict. livespec-driver-pi-hpytnq, this repository's delegation opt-in carrier, owns it.",
+    "work_item": "livespec-driver-pi-hpytnq"
   }
 ]
