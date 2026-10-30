@@ -1,6 +1,6 @@
 ---
 name: livespec-revise
-description: Walk the user through accepting or rejecting pending proposed changes in <spec-root>/proposed_changes/, then snapshot the result as a new <spec-root>/history/vNNN/ revision. Covers every pending proposal by default, or ONE named proposal via --only-topic <topic> — leaving the rest in place — when the user asks to revise a single proposal or their authority covers only their own. Use when the user asks to revise the livespec, process pending proposed changes, or revise only the <topic> proposal. This mutating operation rewrites spec files and writes a new history revision.
+description: Accept, modify, or reject pending proposed changes in <spec-root>/proposed_changes/ — confirming each with the user, or deciding under the project's configured delegated decision mode with independent review — then snapshot the result as a new <spec-root>/history/vNNN/ revision. Covers every pending proposal by default, or ONE named proposal via --only-topic <topic> — leaving the rest in place — when the user asks to revise a single proposal or their authority covers only their own. Use when the user asks to revise the livespec, process pending proposed changes, or revise only the <topic> proposal. This mutating operation rewrites spec files and writes a new history revision.
 allowed-tools: bash read write edit
 ---
 
@@ -103,9 +103,11 @@ non-interactive run — STOP and say so rather than proceeding unguarded.
   python3 "$LIVESPEC_CORE_ROOT/scripts/bin/resolve_template.py"
   ```
 - **"ask the user" / "confirm with the user" / "surface" / "narrate"** —
-  conversational turns in this pi session. pi has no structured-picker tool, so
-  ask in plain prose, present the options explicitly, and wait for the user's
-  reply before proceeding.
+  conversational turns in this pi session. The per-proposal confirmation
+  dialogue runs when core's revise prose requires maintainer input for a
+  proposal, so a manually owned proposal always reaches the user. pi has no
+  structured-picker tool, so ask in plain prose, present the options
+  explicitly, and wait for the user's reply before proceeding.
 - **"read `<file>`"** — the `read` tool. **"write `<file>`"** — the `write`
   tool. **"edit `<file>`"** — the `edit` tool. **"list `<dir>`" / shell work** —
   the `bash` tool.
