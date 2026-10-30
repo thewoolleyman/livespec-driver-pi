@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.2](https://github.com/thewoolleyman/livespec-driver-pi/compare/v0.6.1...v0.6.2) (2026-10-30)
+
+
+### Bug Fixes
+
+* **release:** release the delegated-revise wording fix as v0.6.2 ([385b081](https://github.com/thewoolleyman/livespec-driver-pi/commit/385b0815a9d244d321a86c8b06c0b626e2446f20))
+
 ## [0.6.1](https://github.com/thewoolleyman/livespec-driver-pi/compare/v0.6.0...v0.6.1) (2026-10-25)
 
 
