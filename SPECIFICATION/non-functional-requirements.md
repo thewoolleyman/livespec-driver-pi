@@ -150,6 +150,16 @@ stopping points. The primary-checkout commit-refuse hook is owned upstream by
 `livespec/SPECIFICATION/non-functional-requirements.md`; this repo installs the
 canonical scaffold and does not re-specify it.
 
+**Hold-label disarm (inherited).** Because this repository carries
+`.github/workflows/auto-enable-merge.yml`, it MUST also carry
+`.github/workflows/disarm-on-hold-label.yml`, identical to livespec's root copy
+except that the App-token input key matches this repository's
+`auto-enable-merge.yml`, which turns a pull request's auto-merge off when the
+`do-not-merge` label is added to it. The behaviour, and the rule that every
+fleet member carrying `auto-enable-merge.yml` carries it, are livespec's
+`non-functional-requirements.md` §"Shared content sync — copier template" and
+are not restated here.
+
 ## Scenarios
 
 **The acceptance bar for claiming pi support.** Per the pi dogfooding
