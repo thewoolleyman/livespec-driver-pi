@@ -1,15 +1,12 @@
 # Workflow-edit exemption — one exemption binds to one reviewed change.
 #
-# The change: .github/workflows/ci.yml gains one step per pytest-running job
-# (check-coverage, the suite producer here), each placed after the job's pytest step with if: ${{ !cancelled() }}
-# and calling thewoolleyman/livespec-dev-tooling/.github/actions/publish-flake-retries@v1.189.0.
-# ADDITIVE ONLY: no workflow line is deleted or modified and no job is added.
-# The step uploads tmp/flake-retries/ when the livespec_flake_retry plugin
-# re-ran a test, and ships nothing otherwise (if-no-files-found: ignore).
-# Rest-of-fleet consumer leg of livespec-dev-tooling-ljea46 under plan
-# fleet-flaky-tests; the same step is proven in livespec, livespec-overseer and
-# livespec-orchestrator-beads-fabro.
-work_item=livespec-driver-pi-baowvv
-reason=Deliver each CI job's flake-retry records to the dev-host reader so every retried test files one root-fix item; the shared action owns the artifact contract.
+# The change: ONE NEW FILE, .github/workflows/disarm-on-hold-label.yml, this
+# repository's copy of livespec's root disarm workflow, identical except that
+# the App-token input key is app-id: (matching this repository's own
+# auto-enable-merge.yml) instead of client-id:. On a pull_request `labeled`
+# event for `do-not-merge` it turns that pull request's auto-merge off.
+# ADDITIVE ONLY: no existing workflow line is deleted or modified.
+work_item=livespec-driver-pi-6eet7u
+reason=Carry the hold-label disarm workflow livespec core makes inherited fleet policy (livespec non-functional-requirements.md "Shared content sync - copier template", v240; this repo's revise v006). Authorized as approval:workflow-edit-additive under legacy-coordinator-agent's delegation and the maintainer's 2026-11-03T15:00:49Z standing ruling ("I approve all workflow edits, even if they are not strictly additive"). It runs only on a do-not-merge label event, on one hosted job, so CI runtime is unchanged. Plan ci-runtime-and-cost (livespec-dev-tooling-ib3oe3).
 change=additive
 ci_runtime=no-significant-increase
