@@ -10,11 +10,24 @@ set -uo pipefail
 skip_targets=("$@")
 
 targets=()
-while IFS= read -r target; do
-    if [[ -n "$target" && "$target" != \#* ]]; then
+while IFS= read -r line; do
+    target="${line%%#*}"
+    target="${target#"${target%%[![:space:]]*}"}"
+    target="${target%"${target##*[![:space:]]}"}"
+    if [[ -n "$target" ]]; then
         targets+=("$target")
     fi
 done < check-targets.txt
+
+# The green token is keyed only by the committed tree, so it may memoize a
+# member only when that member declares whether it reads outside that tree.
+# Refuse before dispatch: a late finding would waste a full aggregate run and
+# a token from it would imply a verdict the aggregate refuses to report.
+if ! undeclared_members=$(uv run python -m livespec_dev_tooling.green_token undeclared "${targets[@]}"); then
+    printf 'ERROR: these check aggregate members carry no purity declaration: %s\n' \
+        "${undeclared_members//$'\n'/ }" >&2
+    exit 1
+fi
 
 failed=()
 coverage_ran=0
