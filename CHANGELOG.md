@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.3](https://github.com/thewoolleyman/livespec-driver-pi/compare/v0.6.2...v0.6.3) (2026-11-12)
+
+
+### Bug Fixes
+
+* reject undeclared aggregate members ([a0e3db1](https://github.com/thewoolleyman/livespec-driver-pi/commit/a0e3db13d4cf64959ee14a6fd61fade854a250ae))
+* require purity declarations for aggregate members ([d7768da](https://github.com/thewoolleyman/livespec-driver-pi/commit/d7768dad8cfc3ab7fb86b23e347683d9fd45e50d))
+
 ## [0.6.2](https://github.com/thewoolleyman/livespec-driver-pi/compare/v0.6.1...v0.6.2) (2026-10-30)
 
 
