@@ -69,13 +69,13 @@ check-vendor-manifest
 check-work-item-interpolation-delimiters
 check-work-item-status-vocabulary
 check-wrapper-shape
-check-no-workflow-edits
-check-spec-governance-default-block
-check-pi-package-structure
-check-pi-drive-output
-check-extension-quality
-check-lint
-check-format
-check-types
-check-coverage
-check-doctor-static
+check-no-workflow-edits  # purity: world-reading
+check-spec-governance-default-block  # purity: tree-pure
+check-pi-package-structure  # purity: tree-pure
+check-pi-drive-output  # purity: tree-pure
+check-extension-quality  # purity: world-reading
+check-lint  # purity: tree-pure
+check-format  # purity: tree-pure
+check-types  # purity: tree-pure
+check-coverage  # purity: tree-pure
+check-doctor-static  # purity: world-reading
