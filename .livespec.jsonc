@@ -78,8 +78,8 @@
   //   1. An UNREADABLE clone is not treated as "clone unavailable" — it maps
   //      to an EMPTY heading set, which drops EVERY entry for that repo and
   //      fails allowlisted citations with the misleading "is not allowlisted".
-  //      `cross_repo_targets.livespec.local_clone` below is the host-absolute
-  //      /data/projects/livespec, which cannot exist on a CI runner, so the
+  //      `cross_repo_targets.livespec.local_clone` below is the host-local
+  //      ~/workspace/livespec, which cannot exist on a CI runner, so the
   //      check-doctor-static CI job points LIVESPEC_SIBLING_CLONES_ROOT (which
   //      takes precedence over local_clone) at the pinned core checkout it
   //      already makes.
@@ -105,12 +105,12 @@
   "cross_repo_targets": {
     "livespec": {
       "github_url": "https://github.com/thewoolleyman/livespec",
-      "local_clone": "/data/projects/livespec",
+      "local_clone": "~/workspace/livespec",
       "default_branch": "master"
     },
     "livespec-dev-tooling": {
       "github_url": "https://github.com/thewoolleyman/livespec-dev-tooling",
-      "local_clone": "/data/projects/livespec-dev-tooling",
+      "local_clone": "~/workspace/livespec-dev-tooling",
       "default_branch": "master"
     }
   },
