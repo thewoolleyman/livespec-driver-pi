@@ -127,7 +127,7 @@ read the ledger before assuming this section is current. Status is
 ledger-held; what follows is orientation, not the source of truth:
 
 ```bash
-/usr/local/bin/with-livespec-env.sh -- bd -C /data/projects/livespec-driver-pi list --status all
+/usr/local/bin/with-livespec-env.sh -- bd -C "$HOME/workspace/livespec-driver-pi" list --status all
 ```
 
 **Present and working:**
@@ -381,7 +381,7 @@ without exception:
    equals its git-common-dir; a secondary worktree's differs).
 2. Create a dedicated worktree from `master` under the per-user root
    `~/.worktrees/livespec-driver-pi/<branch>` — never as a peer of the clones
-   under `/data/projects`. Create it with the worktree-discipline pack's
+   under `~/workspace`. Create it with the worktree-discipline pack's
    recipe, which adds the worktree under that root, provisions the
    gitignored pack into it, and runs the hydrate hook (run it from the
    primary checkout):
@@ -390,7 +390,7 @@ without exception:
    mise exec -- just worktree-create <branch>
    ```
 
-   A raw `mise exec -- git -C /data/projects/livespec-driver-pi worktree add -b <branch>
+   A raw `mise exec -- git -C "$HOME/workspace/livespec-driver-pi" worktree add -b <branch>
    "$HOME/.worktrees/livespec-driver-pi/<branch>" master` also yields a usable
    worktree — the pre-commit and pre-push hooks install the pack before
    any gate reads it, so the worktree can commit and push with no

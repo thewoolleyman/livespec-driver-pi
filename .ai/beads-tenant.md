@@ -11,7 +11,7 @@ of the directory it resolves. Pass `-C <repo-path>` as a literal command
 argument so the connection block that gets used is this repo's:
 
 ```bash
-/usr/local/bin/with-livespec-env.sh -- bd -C /data/projects/livespec-driver-pi list --status all
+/usr/local/bin/with-livespec-env.sh -- bd -C "$HOME/workspace/livespec-driver-pi" list --status all
 ```
 
 A `bd` run from a *sibling* clone with no `-C`, or with the wrong one,
