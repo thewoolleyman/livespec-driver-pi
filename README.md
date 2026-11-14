@@ -1,5 +1,7 @@
 # livespec-driver-pi
 
+Built with [livespec](https://livespec-ai.org/)
+
 pi Driver package for [livespec](https://github.com/thewoolleyman/livespec) —
 thin SKILL.md bindings over livespec core's harness-neutral operation prose
 and spec-side CLIs, for the pi coding agent runtime. The analogue of
