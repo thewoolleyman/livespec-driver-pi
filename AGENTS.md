@@ -282,6 +282,18 @@ resolve, which `check-agents-ai-references-resolve` enforces).
   credential-wrapper invocation that `PATH`-scrub and the
   `tick_generation_changed` race both demand, and the dispatch journal
   that is the audit trail of every attempt.
+- Read the fleet's distributed SendMessage protocol
+  (<https://github.com/thewoolleyman/livespec-dev-tooling/blob/master/.ai/distributed-sendmessage-protocol.md>)
+  before messaging, asking, directing or answering another agent session
+  on any host, and before running `herdr pane send-text`,
+  `herdr pane run`, `herdr agent prompt` or `tmux send-keys` against a
+  pane you did not create. Claude sessions talk through `SendMessage`
+  (across machines via Remote Control), never by typing into each
+  other's panes (maintainer ruling 2026-11-14). A pi agent cannot call
+  `SendMessage`, and other sessions may still reach a pi agent by typing
+  into its pane. To reach a CLAUDE session, a pi agent must NOT type
+  into that session's pane (a managed hook denies it): leave a ledger
+  comment on the work item or plan epic concerned instead.
 
 ## Decision authority — when to ask, proceed, or self-resolve
 
